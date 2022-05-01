@@ -1,7 +1,7 @@
 {
   "name": "eiromplays-ui",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "run-p build:*",
     "build:scripts": "vite build",
@@ -16,6 +16,13 @@
       "import": "./dist/index.es.js"
     },
     "./dist/style.css": "./dist/style.css"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*"
+      ]
+    }
   },
   "sideEffects": false,
   "files": [
