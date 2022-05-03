@@ -1,3 +1,4 @@
+import React from 'react';
 import createDOMPurify from 'dompurify';
 import { marked } from 'marked';
 

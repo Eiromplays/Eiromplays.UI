@@ -1,5 +1,6 @@
 // Original source code: https://codesandbox.io/s/dynamiciconload-react-icons-6imgv?file=/src/DynamicIcon.tsx
 
+import React from 'react';
 import loadable from '@loadable/component';
 import { CSSProperties, SVGAttributes } from 'react';
 import { IconContext } from 'react-icons';

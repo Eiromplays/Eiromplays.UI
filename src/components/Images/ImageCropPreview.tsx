@@ -1,3 +1,4 @@
+import React from 'react';
 import { PixelCrop } from 'react-image-crop';
 
 export const ImageCropPreview = (

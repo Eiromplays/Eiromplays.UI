@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { HiOutlineExclamation, HiOutlineInformationCircle } from 'react-icons/hi';
 
 import { Button } from '@/components/Elements/Button';

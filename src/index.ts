@@ -1,5 +1,4 @@
-import 'tailwindcss/tailwind.css';
-import React from 'react';
+import './index.scss';
 
 export * from '@/components/Elements/index';
 export * from '@/components/Form/index';

@@ -1,3 +1,4 @@
+import React from 'react';
 import clsx from 'clsx';
 import { Link as RouterLink, LinkProps } from '@tanstack/react-location';
 

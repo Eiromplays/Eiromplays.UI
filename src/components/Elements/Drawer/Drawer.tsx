@@ -1,6 +1,6 @@
+import React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import clsx from 'clsx';
-import * as React from 'react';
 import { HiOutlineX } from 'react-icons/hi';
 import 'intersection-observer';
 
