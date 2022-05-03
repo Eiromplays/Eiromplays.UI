@@ -1,6 +1,7 @@
 import { Spinner } from '@/components/Elements/Spinner';
 import { AuthUser, getUser } from '@/features/auth';
 import { initReactQueryAuth } from '@/providers/AuthProvider';
+import React from 'react';
 
 async function loadUser(): Promise<AuthUser> {
   const data = await getUser();
