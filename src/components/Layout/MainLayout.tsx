@@ -11,7 +11,7 @@ import {
   HiOutlineUsers,
 } from 'react-icons/hi';
 import { MdOutlineDevicesOther, MdOutlineHistory } from 'react-icons/md';
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from '@tanstack/react-location';
 
 import { useAuth } from '@/lib/auth';
 
@@ -63,7 +63,7 @@ const SideNavigation = () => {
             {item.name}
           </a>
         ) : (
-          <NavLink
+          /*<NavLink
             end={index === 0}
             key={item.name}
             to={item.to}
@@ -83,7 +83,8 @@ const SideNavigation = () => {
               aria-hidden="true"
             />
             {item.name}
-          </NavLink>
+          </NavLink>*/
+          <>NavLink!</>
         );
       })}
     </>

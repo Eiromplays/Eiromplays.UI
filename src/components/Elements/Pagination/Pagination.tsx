@@ -1,7 +1,6 @@
 // Original source code: https://github.com/estevanmaito/windmill-react-ui/blob/master/src/Pagination.tsx AND https://javascript.plainenglish.io/building-a-pagination-component-in-react-with-typescript-2e7f7b62b35d
 
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
-import { useSearchParams } from 'react-router-dom';
 import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
@@ -22,7 +21,6 @@ export type PaginationProps<Entry> = {
 };
 
 export const Pagination = <Entry extends any>({ paginationResponse }: PaginationProps<Entry>) => {
-  const [searchParams, setSearchParams] = useSearchParams();
   const { totalPages, currentPage: page } = paginationResponse;
 
   const NextPage = () => {
@@ -36,13 +34,13 @@ export const Pagination = <Entry extends any>({ paginationResponse }: Pagination
   };
 
   const SetPage = (page: number) => {
-    searchParams.set('page', page.toString());
-    setSearchParams(searchParams);
+    /*searchParams.set('page', page.toString());
+    setSearchParams(searchParams);*/
   };
 
   const SetPageSize = (pageSize: number) => {
-    searchParams.set('pageSize', pageSize.toString());
-    setSearchParams(searchParams);
+    /*searchParams.set('pageSize', pageSize.toString());
+    setSearchParams(searchParams);*/
   };
 
   const handleChange = (newValue: OnChangeValue<PaginationPageSizeOption, false>) => {
