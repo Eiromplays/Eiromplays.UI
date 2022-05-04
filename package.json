@@ -1,7 +1,7 @@
 {
   "name": "eiromplays-ui",
   "private": false,
-  "version": "0.2.8",
+  "version": "0.2.9",
   "scripts": {
     "dev": "vite",
     "build": "run-p build:*",
@@ -33,6 +33,7 @@
     "@headlessui/react": "^1.6.0",
     "@hookform/resolvers": "^2.8.8",
     "@loadable/component": "^5.15.2",
+    "@tailwindcss/typography": "^0.5.2",
     "@types/dompurify": "^2.3.3",
     "@types/loadable__component": "^5.13.4",
     "@types/marked": "^4.0.3",
