@@ -29,12 +29,11 @@ const ErrorFallback = () => {
 
 type AppProviderProps = {
   routes: Route<any>[];
+  location?: ReactLocation;
   children?: React.ReactNode;
 };
 
-const location = new ReactLocation();
-
-export const AppProvider = ({ routes, children }: AppProviderProps) => {
+export const AppProvider = ({ routes, location = new ReactLocation(), children }: AppProviderProps) => {
   return (
     <React.Suspense
       fallback={
@@ -47,7 +46,7 @@ export const AppProvider = ({ routes, children }: AppProviderProps) => {
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
             <Router location={location} routes={routes}>
-              <ReactQueryDevtools position='bottom-right' />
+              <ReactQueryDevtools position="bottom-right" />
               <ReactLocationDevtools />
               <AuthProvider>
                 <ToastContainer

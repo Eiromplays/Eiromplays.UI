@@ -2,7 +2,8 @@ const colors = require('tailwindcss/colors');
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
-  content: ['src/**/*.{ts,tsx,js,jsx}', 'dist/**/*.{ts,tsx,js,jsx}', '**/*.html'],
+  jit: true,
+  content: ['src/**/*.{ts,tsx,js,jsx}', '**/*.html'],
   darkMode: 'class', // 'media', 'class' or false (to disable dark mode)
   theme: {
     extend: {
@@ -17,6 +18,12 @@ module.exports = {
         'circle': '50%',
       }
     },
+  },
+  experimental: {
+    optimizeUniversalDefaults: true
+  },
+  corePlugins: {
+    preflight: false,
   },
   plugins: [require('@tailwindcss/typography')],
 }
