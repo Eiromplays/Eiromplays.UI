@@ -11,7 +11,6 @@ import { Button, Spinner } from '@/components/Elements';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider, queryClient } from '@/lib';
-import '../index.scss';
 
 const ErrorFallback = () => {
   return (
@@ -45,26 +44,26 @@ export const AppProvider = ({ routes, location = new ReactLocation(), children }
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-            <Router location={location} routes={routes}>
-              <ReactQueryDevtools position="bottom-right" />
-              <ReactLocationDevtools />
-              <AuthProvider>
-                <ToastContainer
-                  position="top-right"
-                  theme="dark"
-                  autoClose={5000}
-                  hideProgressBar={false}
-                  newestOnTop
-                  closeOnClick
-                  rtl={false}
-                  pauseOnFocusLoss
-                  draggable
-                  pauseOnHover
-                />
-                <Outlet />
-                {children}
-              </AuthProvider>
-            </Router>
+          <AuthProvider>
+              <Router location={location} routes={routes}>
+                <ReactQueryDevtools position="bottom-right" />
+                <ReactLocationDevtools />
+                  <ToastContainer
+                    position="top-right"
+                    theme="dark"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                  />
+                  <Outlet />
+                  {children}
+              </Router>
+            </AuthProvider>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>
