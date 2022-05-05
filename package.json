@@ -1,7 +1,7 @@
 {
   "name": "eiromplays-ui",
   "private": false,
-  "version": "0.3.4",
+  "version": "0.3.5",
   "scripts": {
     "build": "run-p build:*",
     "build:scripts": "vite build",
@@ -16,10 +16,13 @@
   "peerDependencies": {
     "@headlessui/react": "^1.6.0",
     "@loadable/component": "^5.15.2",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
     "clsx": "^1.1.1",
     "dompurify": "^2.3.6",
     "intersection-observer": "^0.12.0",
     "marked": "^4.0.14",
+    "react-dom": "^18.1.0",
     "react-hook-form": "^7.30.0",
     "react-icons": "^4.3.1",
     "react-image-crop": "^10.0.0",
