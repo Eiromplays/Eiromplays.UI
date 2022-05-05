@@ -19,8 +19,7 @@
     "declarationMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "src": ["typings.d.ts"]
+      "@/*": ["src/*"]
     }
   },
   "include": ["./src"]
