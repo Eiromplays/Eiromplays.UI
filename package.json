@@ -1,7 +1,7 @@
 {
   "name": "eiromplays-ui",
   "private": false,
-  "version": "0.3.6",
+  "version": "0.3.7",
   "scripts": {
     "build": "run-p build:*",
     "build:scripts": "vite build",
@@ -67,19 +67,21 @@
     "vite-plugin-dts": "^1.1.1",
     "zod": "^3.14.4"
   },
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.es.js"
+    },
+    "./dist/style.css": "./dist/style.css",
+    "./*": "./dist/*"
+  },
+  "sideEffects": false,
   "files": [
     "dist"
   ],
-  "main": "./dist/eiromplaysui.umd.js",
-  "module": "./dist/eiromplaysui.es.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "import": "./dist/eiromplaysui.es.js",
-      "require": "./dist/eiromplaysui.umd.js"
-    }
-  },
-  "sideEffects": false,
   "description": "A UI library used for my some of my React projects",
   "repository": "https://github.com/Eiromplays/Eiromplays.UI",
   "author": "Eirik Sjøløkken",
