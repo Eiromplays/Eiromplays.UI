@@ -1,3 +1,5 @@
+import { AuthUser } from "..";
+
 export type BaseEntity = {
   id: string;
   createdAt: number;

@@ -4,13 +4,13 @@ import { HelmetProvider } from 'react-helmet-async';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
-import { Router, ReactLocation, Outlet, Route } from '@tanstack/react-location';
 import { ReactLocationDevtools } from '@tanstack/react-location-devtools';
 
 import { Button, Spinner } from '@/components/Elements';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider, queryClient } from '@/lib';
+import { Outlet, ReactLocation, Router, Route, PartialGenerics, DefaultGenerics } from '@tanstack/react-location';
 
 const ErrorFallback = () => {
   return (
@@ -26,13 +26,15 @@ const ErrorFallback = () => {
   );
 };
 
-type AppProviderProps = {
-  routes: Route<any>[];
-  location?: ReactLocation;
+type AppProviderProps<TGenerics extends PartialGenerics = DefaultGenerics> = {
+  routes?: Route<TGenerics>[];
+  location?: ReactLocation<TGenerics>;
+  createDefaultOutlet?: boolean;
   children?: React.ReactNode;
 };
 
-export const AppProvider = ({ routes, location = new ReactLocation(), children }: AppProviderProps) => {
+
+export const AppProvider = <TGenerics extends PartialGenerics = DefaultGenerics>({ routes = [], location = new ReactLocation<TGenerics>(), createDefaultOutlet = true, children }: AppProviderProps<TGenerics>) => {
   return (
     <React.Suspense
       fallback={
@@ -44,24 +46,24 @@ export const AppProvider = ({ routes, location = new ReactLocation(), children }
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-          <AuthProvider>
+            <AuthProvider>
               <Router location={location} routes={routes}>
                 <ReactQueryDevtools position="bottom-right" />
                 <ReactLocationDevtools />
-                  <ToastContainer
-                    position="top-right"
-                    theme="dark"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    newestOnTop
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                  />
-                  <Outlet />
-                  {children}
+                <ToastContainer
+                  position="top-right"
+                  theme="dark"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                />
+                {createDefaultOutlet && <Outlet />}
+                {children}
               </Router>
             </AuthProvider>
           </QueryClientProvider>

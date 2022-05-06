@@ -15,7 +15,7 @@ import { Link } from '@tanstack/react-location';
 
 import { useAuth } from '@/lib/auth';
 
-import { Button } from '../Elements';
+import { Button, NavLink } from '../Elements';
 import ThemeToggle from '../Theme/ThemeToggle';
 
 type SideNavigationItem = {
@@ -63,7 +63,7 @@ const SideNavigation = () => {
             {item.name}
           </a>
         ) : (
-          /*<NavLink
+          <NavLink
             end={index === 0}
             key={item.name}
             to={item.to}
@@ -83,8 +83,7 @@ const SideNavigation = () => {
               aria-hidden="true"
             />
             {item.name}
-          </NavLink>*/
-          <>NavLink!</>
+          </NavLink>
         );
       })}
     </>
