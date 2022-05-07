@@ -60,7 +60,7 @@ export const Table = <Entry extends BaseEntry | any>({ data, columns }: TablePro
                         key={title + columnIndex}
                         className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
                       >
-                        {Cell && <Cell entry={entry} />}
+                        {Cell ? <Cell entry={entry} /> : (entry as any)[field]}
                       </td>
                     ))}
                   </tr>

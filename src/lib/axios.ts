@@ -28,7 +28,7 @@ axios.interceptors.response.use(
 
     const shouldWhitelist = whitelists.some(
       (whitelist) =>
-        whitelist.urls.some(
+        whitelist.urls?.some(
           (url) =>
             url.toLowerCase() ===
             new URL(error.request.responseURL).pathname.replace(/\/$/, '').toLowerCase()

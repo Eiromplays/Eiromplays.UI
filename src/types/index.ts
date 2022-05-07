@@ -1,5 +1,3 @@
-import { AuthUser } from "..";
-
 export type BaseEntity = {
   id: string;
   createdAt: number;
@@ -12,7 +10,7 @@ export type Claim = {
 
 export type WhitelistAxiosError = {
   status: number;
-  urls: string[];
+  urls?: string[];
   ignoreAll?: boolean;
 };
 

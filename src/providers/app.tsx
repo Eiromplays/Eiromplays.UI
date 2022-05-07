@@ -1,16 +1,17 @@
+import { Outlet, ReactLocation, Router, Route, MakeGenerics } from '@tanstack/react-location';
+import { ReactLocationDevtools } from '@tanstack/react-location-devtools';
 import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { HelmetProvider } from 'react-helmet-async';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
-import { ReactLocationDevtools } from '@tanstack/react-location-devtools';
 
+// eslint-disable-next-line import/order
 import { Button, Spinner } from '@/components/Elements';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider, queryClient } from '@/lib';
-import { Outlet, ReactLocation, Router, Route, PartialGenerics, DefaultGenerics } from '@tanstack/react-location';
 
 const ErrorFallback = () => {
   return (
@@ -26,15 +27,38 @@ const ErrorFallback = () => {
   );
 };
 
-type AppProviderProps<TGenerics extends PartialGenerics = DefaultGenerics> = {
+export type SearchPagination = {
+  index?: number;
+  size?: number;
+};
+
+export type DefaultLocationGenerics = MakeGenerics<{
+  Params: {
+    invoiceId: string;
+    userId: string;
+    logId: string;
+    roleId: string;
+    key: string;
+    Id: string;
+  };
+  Search: {
+    pagination: SearchPagination;
+  };
+}>;
+
+type AppProviderProps<TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics> = {
   routes?: Route<TGenerics>[];
   location?: ReactLocation<TGenerics>;
   createDefaultOutlet?: boolean;
   children?: React.ReactNode;
 };
 
-
-export const AppProvider = <TGenerics extends PartialGenerics = DefaultGenerics>({ routes = [], location = new ReactLocation<TGenerics>(), createDefaultOutlet = true, children }: AppProviderProps<TGenerics>) => {
+export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics>({
+  routes = [],
+  location = new ReactLocation<TGenerics>(),
+  createDefaultOutlet = true,
+  children,
+}: AppProviderProps<TGenerics>) => {
   return (
     <React.Suspense
       fallback={
@@ -47,9 +71,24 @@ export const AppProvider = <TGenerics extends PartialGenerics = DefaultGenerics>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
             <AuthProvider>
-              <Router location={location} routes={routes}>
-                <ReactQueryDevtools position="bottom-right" />
-                <ReactLocationDevtools />
+              <Router
+                location={location}
+                routes={routes}
+                defaultPendingElement={
+                  <div className="flex items-center justify-center w-screen h-screen dark:bg-lighter-black">
+                    <Spinner size="xl" />
+                  </div>
+                }
+              >
+                <ReactLocationDevtools initialIsOpen={false} />
+                <ReactQueryDevtools
+                  initialIsOpen={false}
+                  toggleButtonProps={{
+                    style: {
+                      marginLeft: '4rem',
+                    },
+                  }}
+                />
                 <ToastContainer
                   position="top-right"
                   theme="dark"

@@ -1,10 +1,12 @@
 // Original source code: https://github.com/estevanmaito/windmill-react-ui/blob/master/src/Pagination.tsx AND https://javascript.plainenglish.io/building-a-pagination-component-in-react-with-typescript-2e7f7b62b35d
 
+import { useNavigate } from '@tanstack/react-location';
 import React from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+import { DefaultLocationGenerics } from '@/providers';
 import { PaginationResponse } from '@/types';
 
 import { Button } from '../Button';
@@ -21,8 +23,15 @@ export type PaginationProps<Entry> = {
   paginationResponse: PaginationResponse<Entry>;
 };
 
-export const Pagination = <Entry extends any>({ paginationResponse }: PaginationProps<Entry>) => {
+export const Pagination = <
+  Entry,
+  TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
+>({
+  paginationResponse,
+}: PaginationProps<Entry>) => {
   const { totalPages, currentPage: page } = paginationResponse;
+
+  const navigate = useNavigate<TGenerics>();
 
   const NextPage = () => {
     if (!paginationResponse.hasNextPage) return;
@@ -35,20 +44,42 @@ export const Pagination = <Entry extends any>({ paginationResponse }: Pagination
   };
 
   const SetPage = (page: number) => {
-    /*searchParams.set('page', page.toString());
-    setSearchParams(searchParams);*/
+    navigate({
+      search: (old: any) => {
+        return {
+          ...old,
+          pagination: {
+            ...old?.pagination,
+            index: page,
+          },
+        };
+      },
+      replace: true,
+    });
   };
 
   const SetPageSize = (pageSize: number) => {
-    /*searchParams.set('pageSize', pageSize.toString());
-    setSearchParams(searchParams);*/
+    navigate({
+      search: (old: any) => {
+        return {
+          ...old,
+          pagination: {
+            ...old?.pagination,
+            size: pageSize,
+          },
+        };
+      },
+      replace: true,
+    });
   };
 
   const handleChange = (newValue: OnChangeValue<PaginationPageSizeOption, false>) => {
     SetPageSize(newValue?.value || 10);
   };
-  const handleInputChange = (inputValue: any) => {
-    SetPageSize(inputValue || 10);
+
+  const handleInputChange = (newValue: string) => {
+    if (!newValue) return;
+    SetPageSize(parseInt(newValue, 10) || 10);
   };
 
   return (
@@ -108,7 +139,7 @@ export const Pagination = <Entry extends any>({ paginationResponse }: Pagination
                     </Button>
                   )}
                 </li>
-                <PageButton page={1} isActive={1 === page} onClick={SetPage} />
+                <PageButton page={1} isActive={1 === page} onClick={(page) => SetPage(page)} />
                 {page > 3 && <EmptyPageButton />}
                 {page === totalPages && totalPages > 3 && (
                   <PageButton page={page - 2} isActive={page - 2 === page} onClick={SetPage} />

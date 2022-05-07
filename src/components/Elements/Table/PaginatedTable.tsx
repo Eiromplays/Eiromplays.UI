@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { HiOutlineArchive } from 'react-icons/hi';
 
 import { Pagination, PaginationProps } from '../Pagination';

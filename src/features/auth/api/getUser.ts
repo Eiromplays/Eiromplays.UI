@@ -49,7 +49,8 @@ export const getUser = async (): Promise<AuthUser | null> => {
 };
 
 export const silentLogin = () => {
-  const useSilentLogin = process.env.REACT_APP_USE_SILENT_LOGIN || process.env.VITE_USE_SILENT_LOGIN;
+  const useSilentLogin =
+    process.env.REACT_APP_USE_SILENT_LOGIN || process.env.VITE_USE_SILENT_LOGIN;
 
   // TODO: Find a better solution for useSilentLogin
   if (useSilentLogin?.toLowerCase() === 'false') return;
