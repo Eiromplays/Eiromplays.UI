@@ -1,4 +1,5 @@
 import { Dialog, Menu, Transition } from '@headlessui/react';
+import { Link } from '@tanstack/react-location';
 import clsx from 'clsx';
 import * as React from 'react';
 import {
@@ -11,29 +12,32 @@ import {
   HiOutlineUsers,
 } from 'react-icons/hi';
 import { MdOutlineDevicesOther, MdOutlineHistory } from 'react-icons/md';
-import { Link } from '@tanstack/react-location';
 
 import { useAuth } from '@/lib/auth';
 
-import { Button, NavLink } from '../Elements';
-import ThemeToggle from '../Theme/ThemeToggle';
+import { Button } from '../Elements';
+import { ThemeToggle } from '../Theme/ThemeToggle';
 
 type SideNavigationItem = {
   name: string;
   to: string;
   target?: string;
-  externalLink: boolean;
+  externalLink?: boolean;
   icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
 };
 
-const SideNavigation = () => {
-  const navigation = [
+type SideNavigationProps = {
+  items?: SideNavigationItem[];
+};
+
+const SideNavigation = ({
+  items = [
     { name: 'Dashboard', to: '.', icon: HiOutlineHome },
-    { name: 'Users', to: './users', icon: HiOutlineUsers },
-    { name: 'Roles', to: './roles', icon: HiOutlineUsers },
-    { name: 'Persisted Grants', to: './persisted-grants', icon: HiOutlineShieldCheck },
-    { name: 'User Sessions', to: './user-sessions', icon: MdOutlineDevicesOther },
-    { name: 'Logs', to: './logs', icon: MdOutlineHistory },
+    { name: 'Users', to: 'users', icon: HiOutlineUsers },
+    { name: 'Roles', to: 'roles', icon: HiOutlineUsers },
+    { name: 'Persisted Grants', to: 'persisted-grants', icon: HiOutlineShieldCheck },
+    { name: 'User Sessions', to: 'user-sessions', icon: MdOutlineDevicesOther },
+    { name: 'Logs', to: 'logs', icon: MdOutlineHistory },
     {
       name: 'Discovery Document',
       to: 'https://localhost:7001/.well-known/openid-configuration',
@@ -41,11 +45,11 @@ const SideNavigation = () => {
       externalLink: true,
       icon: HiOutlineDocumentText,
     },
-  ].filter(Boolean) as SideNavigationItem[];
-
+  ],
+}: SideNavigationProps) => {
   return (
     <>
-      {navigation.map((item, index) => {
+      {items.map((item) => {
         return item.externalLink ? (
           <a
             key={item.name}
@@ -63,17 +67,22 @@ const SideNavigation = () => {
             {item.name}
           </a>
         ) : (
-          <NavLink
-            end={index === 0}
+          <Link
             key={item.name}
             to={item.to}
             target={item.target}
-            className={(navData) =>
-              clsx(
-                'hover:bg-gray-700 hover:text-white',
-                'group flex items-center px-2 py-2 font-medium rounded-md'
-              ) + (navData.isActive ? 'bg-gray-900 text-white' : 'bg-transparent text-gray-400')
-            }
+            className={clsx(
+              'hover:bg-gray-700 hover:text-white',
+              'group flex items-center px-2 py-2 font-medium rounded-md bg-transparent text-gray-400'
+            )}
+            getActiveProps={() => ({
+              className: 'bg-gray-900 text-white',
+            })}
+            activeOptions={{
+              // If the route points to the root of it's parent,
+              // make sure it's only active if it's exact
+              exact: item.to === '.',
+            }}
           >
             <item.icon
               className={clsx(
@@ -83,7 +92,7 @@ const SideNavigation = () => {
               aria-hidden="true"
             />
             {item.name}
-          </NavLink>
+          </Link>
         );
       })}
     </>
@@ -96,10 +105,12 @@ type UserNavigationItem = {
   onClick?: () => void;
 };
 
-const UserNavigation = () => {
-  const { user, logout } = useAuth();
+type UserNavigationProps = {
+  items?: UserNavigationItem[];
+};
 
-  const userNavigation = [
+const UserNavigation = ({
+  items = [
     {
       name: 'Your Profile',
       to: 'https://localhost:3000/app/profile',
@@ -107,12 +118,15 @@ const UserNavigation = () => {
         window.location.href = 'https://localhost:3000/app/profile';
       },
     },
-    {
-      name: 'Sign out',
-      to: user?.logoutUrl,
-      onClick: async () => await logout(),
-    },
-  ].filter(Boolean) as UserNavigationItem[];
+  ],
+}: UserNavigationProps) => {
+  const { user, logout } = useAuth();
+
+  items.push({
+    name: 'Sign out',
+    to: user?.logoutUrl || '',
+    onClick: async () => await logout(),
+  });
 
   return (
     <Menu as="div" className="ml-3 relative">
@@ -154,7 +168,7 @@ const UserNavigation = () => {
               className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-lighter-black ring-1 
               ring-black ring-opacity-5 focus:outline-none"
             >
-              {userNavigation.map((item) => (
+              {items.map((item) => (
                 <Menu.Item key={item.name}>
                   {({ active }) => (
                     <Link
@@ -249,7 +263,7 @@ const MobileSidebar = ({ sidebarOpen, setSidebarOpen, logo }: MobileSidebarProps
   );
 };
 
-const Sidebar = ({logo}: LogoProps) => {
+const Sidebar = ({ logo }: LogoProps) => {
   return (
     <div className="hidden md:flex md:flex-shrink-0">
       <div className="flex flex-col w-64">

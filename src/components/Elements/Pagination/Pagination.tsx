@@ -1,6 +1,6 @@
 // Original source code: https://github.com/estevanmaito/windmill-react-ui/blob/master/src/Pagination.tsx AND https://javascript.plainenglish.io/building-a-pagination-component-in-react-with-typescript-2e7f7b62b35d
 
-import { useNavigate } from '@tanstack/react-location';
+import { useNavigate, useSearch } from '@tanstack/react-location';
 import React from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { OnChangeValue } from 'react-select';
@@ -11,16 +11,14 @@ import { PaginationResponse } from '@/types';
 
 import { Button } from '../Button';
 
-import {
-  defaultPaginationPageSizeOption,
-  PaginationPageSizeOption,
-  paginationPageSizeOptions,
-} from './data';
+import { PaginationPageSizeOption, paginationPageSizeOptions } from './data';
 import { EmptyPageButton } from './EmptyPageButton';
 import { PageButton } from './PageButton';
 
 export type PaginationProps<Entry> = {
   paginationResponse: PaginationResponse<Entry>;
+  onPageChanged?: (page: number) => void;
+  onPageSizeChanged?: (pageSize: number) => void;
 };
 
 export const Pagination = <
@@ -28,10 +26,14 @@ export const Pagination = <
   TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >({
   paginationResponse,
+  onPageChanged,
+  onPageSizeChanged,
 }: PaginationProps<Entry>) => {
   const { totalPages, currentPage: page } = paginationResponse;
-
   const navigate = useNavigate<TGenerics>();
+  const { pagination } = useSearch<TGenerics>();
+  const currentPage = pagination?.index ?? 1;
+  const currentSize = pagination?.size ?? 10;
 
   const NextPage = () => {
     if (!paginationResponse.hasNextPage) return;
@@ -43,34 +45,38 @@ export const Pagination = <
     SetPage(page - 1);
   };
 
-  const SetPage = (page: number) => {
+  const SetPage = (newPage: number) => {
+    if (newPage === pagination?.index) return;
     navigate({
       search: (old: any) => {
         return {
           ...old,
           pagination: {
             ...old?.pagination,
-            index: page,
+            index: newPage,
           },
         };
       },
       replace: true,
     });
+    if (onPageChanged) onPageChanged(newPage);
   };
 
-  const SetPageSize = (pageSize: number) => {
+  const SetPageSize = (newPageSize: number) => {
+    if (newPageSize === pagination?.size) return;
     navigate({
       search: (old: any) => {
         return {
           ...old,
           pagination: {
             ...old?.pagination,
-            size: pageSize,
+            size: newPageSize,
           },
         };
       },
       replace: true,
     });
+    if (onPageSizeChanged) onPageSizeChanged(newPageSize);
   };
 
   const handleChange = (newValue: OnChangeValue<PaginationPageSizeOption, false>) => {
@@ -79,6 +85,7 @@ export const Pagination = <
 
   const handleInputChange = (newValue: string) => {
     if (!newValue) return;
+
     SetPageSize(parseInt(newValue, 10) || 10);
   };
 
@@ -180,7 +187,7 @@ export const Pagination = <
           isClearable
           onChange={handleChange}
           onInputChange={handleInputChange}
-          defaultValue={defaultPaginationPageSizeOption}
+          defaultValue={{ value: currentPage, label: currentSize.toString() }}
           options={paginationPageSizeOptions}
           className="ml-4"
         />

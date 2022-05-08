@@ -14,6 +14,8 @@ export const PaginatedTable = <Entry extends BaseEntry | any>({
   paginationResponse,
   data,
   columns,
+  onPageChanged,
+  onPageSizeChanged,
 }: PaginatedTableProps<Entry>) => {
   if (!data?.length) {
     return (
@@ -27,7 +29,11 @@ export const PaginatedTable = <Entry extends BaseEntry | any>({
   return (
     <div>
       <Table data={data} columns={columns} />
-      <Pagination paginationResponse={paginationResponse} />
+      <Pagination
+        paginationResponse={paginationResponse}
+        onPageChanged={onPageChanged}
+        onPageSizeChanged={onPageSizeChanged}
+      />
     </div>
   );
 };

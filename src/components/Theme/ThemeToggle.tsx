@@ -3,7 +3,7 @@ import { FaSun, FaMoon } from 'react-icons/fa';
 
 import { useDarkMode } from '@/hooks/useDarkMode';
 
-const ThemeToggle = () => {
+export const ThemeToggle = () => {
   const { colorTheme, toggleTheme } = useDarkMode();
 
   return (
@@ -22,5 +22,3 @@ const ThemeToggle = () => {
     </div>
   );
 };
-
-export default ThemeToggle;
