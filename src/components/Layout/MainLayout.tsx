@@ -107,6 +107,7 @@ type UserNavigationItem = {
 
 type UserNavigationProps = {
   items?: UserNavigationItem[];
+  addSignOutItem?: boolean;
 };
 
 const UserNavigation = ({
@@ -119,14 +120,16 @@ const UserNavigation = ({
       },
     },
   ],
+  addSignOutItem = true,
 }: UserNavigationProps) => {
   const { user, logout } = useAuth();
 
-  items.push({
-    name: 'Sign out',
-    to: user?.logoutUrl || '',
-    onClick: async () => await logout(),
-  });
+  if (addSignOutItem)
+    items.push({
+      name: 'Sign out',
+      to: user?.logoutUrl || '',
+      onClick: async () => await logout(),
+    });
 
   return (
     <Menu as="div" className="ml-3 relative">
@@ -263,7 +266,9 @@ const MobileSidebar = ({ sidebarOpen, setSidebarOpen, logo }: MobileSidebarProps
   );
 };
 
-const Sidebar = ({ logo }: LogoProps) => {
+type SideBarProps = LogoProps & SideNavigationProps;
+
+const Sidebar = ({ logo, items }: SideBarProps) => {
   return (
     <div className="hidden md:flex md:flex-shrink-0">
       <div className="flex flex-col w-64">
@@ -273,7 +278,7 @@ const Sidebar = ({ logo }: LogoProps) => {
           </div>
           <div className="flex-1 flex flex-col overflow-y-auto">
             <nav className="flex-1 px-2 py-4 bg-gray-800 dark:bg-lighter-black space-y-1">
-              <SideNavigation />
+              <SideNavigation items={items} />
             </nav>
           </div>
         </div>
@@ -297,15 +302,22 @@ const Logo = ({ logo }: LogoProps) => {
 
 type MainLayoutProps = LogoProps & {
   children: React.ReactNode;
+  userNavigationItems?: UserNavigationItem[];
+  sideBarNavigationItems?: SideNavigationItem[];
 };
 
-export const MainLayout = ({ children, logo }: MainLayoutProps) => {
+export const MainLayout = ({
+  children,
+  userNavigationItems = [],
+  sideBarNavigationItems = [],
+  logo,
+}: MainLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
       <MobileSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} logo={logo} />
-      <Sidebar logo={logo} />
+      <Sidebar logo={logo} items={sideBarNavigationItems} />
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <div className="relative z-10 flex-shrink-0 flex h-16 bg-white dark:bg-gray-800 shadow">
           <button
@@ -317,7 +329,7 @@ export const MainLayout = ({ children, logo }: MainLayoutProps) => {
           </button>
           <div className="flex-1 px-4 flex justify-end">
             <div className="ml-4 flex items-center md:ml-6">
-              <UserNavigation />
+              <UserNavigation items={userNavigationItems} />
             </div>
           </div>
         </div>
