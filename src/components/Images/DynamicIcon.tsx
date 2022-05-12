@@ -1,14 +1,11 @@
 // Original source code: https://codesandbox.io/s/dynamiciconload-react-icons-6imgv?file=/src/DynamicIcon.tsx
-/* @vite-ignore */
 
-import loadable from '@loadable/component';
 import React, { CSSProperties, SVGAttributes } from 'react';
 import { IconContext } from 'react-icons';
-
-import { Spinner } from '@/components/Elements';
+import * as FontAwesome from 'react-icons/fa';
 
 export type DynamicIconProps = {
-  icon: string;
+  iconName: string;
   color?: string;
   size?: string;
   className?: string;
@@ -17,35 +14,18 @@ export type DynamicIconProps = {
 };
 
 export const DynamicIcon = ({
-  icon,
+  iconName,
   color = '',
   size = '',
   className = '',
   style,
   attr,
 }: DynamicIconProps) => {
-  const [library, iconComponent] = icon.split('/');
+  if (!iconName || iconName.length < 1) return <div>Could Not Find Icon</div>;
 
-  if (!library || !iconComponent) return <div>Could Not Find Icon</div>;
-
-  const lib = library.toLowerCase();
-
-  const Icon = loadable(() => import(`react-icons/${lib}/index.js`), {
-    resolveComponent: (components) => {
-      let selectedComponent = iconComponent.toLowerCase();
-      for (const component in components) {
-        if (component.toLowerCase() === selectedComponent) {
-          selectedComponent = component;
-          break;
-        }
-      }
-      if (selectedComponent === iconComponent.toLowerCase()) {
-        return <></>;
-      }
-      return components[selectedComponent as keyof JSX.Element];
-    },
-    fallback: <Spinner />,
-  });
+  const IconComponent = React.createElement(
+    (FontAwesome as any)[`Fa${iconName.charAt(0).toUpperCase() + iconName.slice(1).toLowerCase()}`]
+  );
 
   const value: IconContext = {
     color: color,
@@ -55,9 +35,9 @@ export const DynamicIcon = ({
     attr: attr,
   };
 
-  return (
-    <IconContext.Provider value={value}>
-      <Icon />
-    </IconContext.Provider>
+  return IconComponent ? (
+    <IconContext.Provider value={value}>{IconComponent}</IconContext.Provider>
+  ) : (
+    <></>
   );
 };

@@ -52,6 +52,10 @@ export const silentLogin = () => {
   const useSilentLogin =
     process.env.REACT_APP_USE_SILENT_LOGIN || process.env.VITE_USE_SILENT_LOGIN;
 
+  const redirectToLoginIfSilentLoginFailed =
+    process.env.REACT_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
+    process.env.VITE_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED;
+
   // TODO: Find a better solution for useSilentLogin
   if (useSilentLogin?.toLowerCase() === 'false') return;
 
@@ -67,7 +71,9 @@ export const silentLogin = () => {
     } else if (e.data && e.data.source === 'bff-silent-login' && !e.data.isLoggedIn) {
       // we now have a user logged in silently, so reload this window
 
-      window.location.href = '/bff/login';
+      // TODO: Find a better solution for useSilentLogin
+      if (redirectToLoginIfSilentLoginFailed?.toLowerCase() === 'true')
+        window.location.href = '/bff/login';
     }
   });
 };
