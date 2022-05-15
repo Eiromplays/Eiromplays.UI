@@ -50,11 +50,14 @@ export const getUser = async (): Promise<AuthUser | null> => {
 
 export const silentLogin = () => {
   const useSilentLogin =
-    process.env.REACT_APP_USE_SILENT_LOGIN || process.env.VITE_USE_SILENT_LOGIN;
+    process.env.REACT_APP_USE_SILENT_LOGIN ||
+    process.env.VUE_APP_USE_SILENT_LOGIN ||
+    import.meta.env.VITE_USE_SILENT_LOGIN;
 
   const redirectToLoginIfSilentLoginFailed =
     process.env.REACT_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
-    process.env.VITE_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED;
+    process.env.VUE_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
+    import.meta.env.VITE_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED;
 
   // TODO: Find a better solution for useSilentLogin
   if (useSilentLogin?.toLowerCase() === 'false') return;

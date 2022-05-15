@@ -1,38 +1,45 @@
 import React from 'react';
-import { HiOutlineArchive } from 'react-icons/hi';
+
+import { PaginationFilter } from '@/types';
 
 import { Pagination, PaginationProps } from '../Pagination';
 
 import { BaseEntry, Table, TableColumn } from './Table';
 
-export type PaginatedTableProps<Entry> = PaginationProps<Entry> & {
-  data: Entry[];
+export type PaginatedTableProps<
+  SearchPaginationDTO extends PaginationFilter,
+  Entry
+> = PaginationProps<SearchPaginationDTO, Entry> & {
   columns: TableColumn<Entry>[];
 };
 
-export const PaginatedTable = <Entry extends BaseEntry | any>({
-  paginationResponse,
-  data,
+export const PaginatedTable = <
+  SearchPaginationDTO extends PaginationFilter,
+  Entry extends BaseEntry | any
+>({
+  queryKeyName,
+  url,
+  searchData,
   columns,
   onPageChanged,
   onPageSizeChanged,
-}: PaginatedTableProps<Entry>) => {
-  if (!data?.length) {
-    return (
-      <div className="bg-white dark:bg-lighter-black text-gray-500 dark:text-white h-80 flex justify-center items-center flex-col">
-        <HiOutlineArchive className="h-16 w-16" />
-        <h4>No Entries Found</h4>
-      </div>
-    );
-  }
+  onLoaded,
+}: PaginatedTableProps<SearchPaginationDTO, Entry>) => {
+  const [data, setData] = React.useState<Entry[]>([]);
 
   return (
     <div>
       <Table data={data} columns={columns} />
       <Pagination
-        paginationResponse={paginationResponse}
         onPageChanged={onPageChanged}
         onPageSizeChanged={onPageSizeChanged}
+        onLoaded={(data: Entry[]) => {
+          setTimeout(() => setData(data), 0);
+          onLoaded?.(data);
+        }}
+        queryKeyName={queryKeyName}
+        url={url}
+        searchData={searchData}
       />
     </div>
   );

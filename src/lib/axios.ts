@@ -3,16 +3,17 @@ import { toast } from 'react-toastify';
 
 import { WhitelistAxiosError } from '@/types';
 
-const Whitelists: WhitelistAxiosError[] = [
+export const Whitelists: WhitelistAxiosError[] = [
   { status: 401, urls: ['/bff/user'], ignoreAll: false },
   { status: 400, urls: ['/spa/login'] },
 ];
+
+export const AddDataToRequestIgnoreUrls: string[] = [];
 
 export const axios = Axios.create({
   headers: {
     'X-CSRF': '1',
   },
-  withCredentials: true,
 });
 
 axios.defaults.timeout = 30_000; // If you want to increase this, do it for a specific call, not the global app API.
@@ -23,7 +24,7 @@ axios.interceptors.response.use(
   },
   (error) => {
     const whitelists = Whitelists.filter(
-      (whitelist: WhitelistAxiosError) => whitelist.status === error.response.status
+      (whitelist: WhitelistAxiosError) => whitelist.status === error?.response?.status
     );
 
     const shouldWhitelist = whitelists.some(
@@ -31,7 +32,7 @@ axios.interceptors.response.use(
         whitelist.urls?.some(
           (url) =>
             url.toLowerCase() ===
-            new URL(error.request.responseURL).pathname.replace(/\/$/, '').toLowerCase()
+            new URL(error?.request?.responseURL).pathname.replace(/\/$/, '').toLowerCase()
         ) || whitelist.ignoreAll
     );
 
@@ -59,6 +60,11 @@ axios.interceptors.response.use(
 
 axios.interceptors.request.use(
   (request) => {
+    const shouldIgnore = AddDataToRequestIgnoreUrls.some(
+      (url) => request.url && url.toLowerCase() === request.url.replace(/\/$/, '').toLowerCase()
+    );
+    if (shouldIgnore) return request;
+
     if (request.data) request.data = { Data: request.data };
 
     return request;

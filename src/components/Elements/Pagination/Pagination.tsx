@@ -6,34 +6,84 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+import { queryClient } from '@/lib';
 import { DefaultLocationGenerics } from '@/providers';
-import { PaginationResponse } from '@/types';
+import { PaginationFilter } from '@/types';
 
 import { Button } from '../Button';
+import { Spinner } from '../Spinner';
+import { BaseEntry } from '../Table';
 
 import { PaginationPageSizeOption, paginationPageSizeOptions } from './data';
 import { EmptyPageButton } from './EmptyPageButton';
 import { PageButton } from './PageButton';
+import { searchPagination, useSearchPagination, UseSearchPaginationOptions } from './usePagination';
 
-export type PaginationProps<Entry> = {
-  paginationResponse: PaginationResponse<Entry>;
+export type PaginationProps<
+  SearchPaginationDTO extends PaginationFilter,
+  Entry
+> = UseSearchPaginationOptions<SearchPaginationDTO> & {
   onPageChanged?: (page: number) => void;
   onPageSizeChanged?: (pageSize: number) => void;
+  onLoaded?: (data: Entry[]) => void;
 };
 
 export const Pagination = <
-  Entry,
+  SearchPaginationDTO extends PaginationFilter,
+  Entry extends BaseEntry | any,
   TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >({
-  paginationResponse,
+  queryKeyName,
+  url,
+  searchData,
+  config,
   onPageChanged,
   onPageSizeChanged,
-}: PaginationProps<Entry>) => {
-  const { totalPages, currentPage: page } = paginationResponse;
+  onLoaded,
+}: PaginationProps<SearchPaginationDTO, Entry>) => {
   const navigate = useNavigate<TGenerics>();
   const { pagination } = useSearch<TGenerics>();
   const currentPage = pagination?.index ?? 1;
   const currentSize = pagination?.size ?? 10;
+
+  const searchPaginationQuery = useSearchPagination<SearchPaginationDTO, Entry>({
+    queryKeyName: queryKeyName,
+    url: url,
+    searchData: searchData,
+    config: config,
+  });
+
+  React.useEffect(() => {
+    if (searchPaginationQuery.data?.hasNextPage) {
+      const nextPage = (pagination?.index ?? 1) + 1;
+      const prefetchData = searchData;
+      prefetchData.pageNumber = nextPage;
+      queryClient.prefetchQuery([queryKeyName, nextPage, currentSize], () =>
+        searchPagination(url, prefetchData)
+      );
+    }
+  }, [
+    currentSize,
+    searchData,
+    queryKeyName,
+    searchPaginationQuery.data?.hasNextPage,
+    url,
+    pagination?.index,
+  ]);
+
+  if (searchPaginationQuery.isLoading) {
+    return (
+      <div className="w-full h-48 flex justify-center items-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!searchPaginationQuery.data) return null;
+
+  if (onLoaded) onLoaded(searchPaginationQuery.data.data as Entry[]);
+  const paginationResponse = searchPaginationQuery.data;
+  const { totalPages, currentPage: page } = paginationResponse;
 
   const NextPage = () => {
     if (!paginationResponse.hasNextPage) return;
