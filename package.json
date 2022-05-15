@@ -1,7 +1,7 @@
 {
   "name": "eiromplays-ui",
   "private": false,
-  "version": "0.9.7",
+  "version": "0.9.8",
   "scripts": {
     "build": "run-p build:*",
     "build:scripts": "vite build",
@@ -84,7 +84,6 @@
     "typescript": "^4.6.3",
     "vite": "^2.9.5",
     "vite-plugin-dts": "^1.1.1",
-    "vite-plugin-env-compatible": "^1.1.1",
     "vite-plugin-mkcert": "^1.6.0",
     "vite-tsconfig-paths": "^3.4.1",
     "zod": "^3.14.4"
