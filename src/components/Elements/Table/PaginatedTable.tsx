@@ -26,21 +26,21 @@ export const PaginatedTable = <
   onLoaded,
 }: PaginatedTableProps<SearchPaginationDTO, Entry>) => {
   const [data, setData] = React.useState<Entry[]>([]);
+  const setTableData = React.useCallback((data: Entry[]) => {
+    setData(data);
+  }, []);
 
   return (
     <div>
-      <Table data={data} columns={columns} />
       <Pagination
         onPageChanged={onPageChanged}
         onPageSizeChanged={onPageSizeChanged}
-        onLoaded={(data: Entry[]) => {
-          setTimeout(() => setData(data), 0);
-          onLoaded?.(data);
-        }}
+        onLoaded={setTableData}
         queryKeyName={queryKeyName}
         url={url}
         searchData={searchData}
       />
+      <Table data={data} columns={columns} />
     </div>
   );
 };

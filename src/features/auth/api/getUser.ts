@@ -59,7 +59,6 @@ export const silentLogin = () => {
     process.env.VUE_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
     import.meta.env.VITE_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED;
 
-  // TODO: Find a better solution for useSilentLogin
   if (useSilentLogin?.toLowerCase() === 'false') return;
 
   const bffSilentLoginIframe = document.createElement('iframe');

@@ -36,7 +36,7 @@ export const Pagination = <
   queryKeyName,
   url,
   searchData,
-  config,
+  config = { keepPreviousData: true, enabled: false },
   onPageChanged,
   onPageSizeChanged,
   onLoaded,
@@ -45,6 +45,10 @@ export const Pagination = <
   const { pagination } = useSearch<TGenerics>();
   const currentPage = pagination?.index ?? 1;
   const currentSize = pagination?.size ?? 10;
+  const rerenders = React.useRef(0);
+  const rerenders2 = React.useRef(0);
+  let rerenders3 = 0;
+  let rerenders4 = 0;
 
   const searchPaginationQuery = useSearchPagination<SearchPaginationDTO, Entry>({
     queryKeyName: queryKeyName,
@@ -52,8 +56,9 @@ export const Pagination = <
     searchData: searchData,
     config: config,
   });
+  console.log('currentPage', currentPage);
 
-  React.useEffect(() => {
+  /*React.useEffect(() => {
     if (searchPaginationQuery.data?.hasNextPage) {
       const nextPage = (pagination?.index ?? 1) + 1;
       const prefetchData = searchData;
@@ -64,13 +69,17 @@ export const Pagination = <
     }
   }, [
     currentSize,
-    searchData,
+    pagination?.index,
     queryKeyName,
+    searchData,
     searchPaginationQuery.data?.hasNextPage,
     url,
-    pagination?.index,
-  ]);
+  ]);*/
 
+  rerenders.current += 1;
+  rerenders3 += 1;
+  console.log('rerenders', rerenders.current);
+  console.log('rerenders3', rerenders3);
   if (searchPaginationQuery.isLoading) {
     return (
       <div className="w-full h-48 flex justify-center items-center">
@@ -80,8 +89,12 @@ export const Pagination = <
   }
 
   if (!searchPaginationQuery.data) return null;
+  rerenders2.current += 1;
+  rerenders4 += 1;
+  console.log('rerenders2', rerenders2.current);
+  console.log('rerenders4', rerenders4);
 
-  if (onLoaded) onLoaded(searchPaginationQuery.data.data as Entry[]);
+  //if (onLoaded) onLoaded(searchPaginationQuery.data.data as Entry[]);
   const paginationResponse = searchPaginationQuery.data;
   const { totalPages, currentPage: page } = paginationResponse;
 
@@ -96,7 +109,7 @@ export const Pagination = <
   };
 
   const SetPage = (newPage: number) => {
-    if (newPage === pagination?.index) return;
+    /*if (newPage === pagination?.index) return;
     navigate({
       search: (old: any) => {
         return {
@@ -109,11 +122,11 @@ export const Pagination = <
       },
       replace: true,
     });
-    if (onPageChanged) onPageChanged(newPage);
+    if (onPageChanged) onPageChanged(newPage);*/
   };
 
   const SetPageSize = (newPageSize: number) => {
-    if (newPageSize === pagination?.size) return;
+    /*if (newPageSize === pagination?.size) return;
     navigate({
       search: (old: any) => {
         return {
@@ -126,7 +139,7 @@ export const Pagination = <
       },
       replace: true,
     });
-    if (onPageSizeChanged) onPageSizeChanged(newPageSize);
+    if (onPageSizeChanged) onPageSizeChanged(newPageSize);*/
   };
 
   const handleChange = (newValue: OnChangeValue<PaginationPageSizeOption, false>) => {
