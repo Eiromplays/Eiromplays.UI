@@ -58,7 +58,7 @@ export const Pagination = <
   });
   console.log('currentPage', currentPage);
 
-  /*React.useEffect(() => {
+  React.useEffect(() => {
     if (searchPaginationQuery.data?.hasNextPage) {
       const nextPage = (pagination?.index ?? 1) + 1;
       const prefetchData = searchData;
@@ -74,7 +74,7 @@ export const Pagination = <
     searchData,
     searchPaginationQuery.data?.hasNextPage,
     url,
-  ]);*/
+  ]);
 
   rerenders.current += 1;
   rerenders3 += 1;
@@ -94,7 +94,7 @@ export const Pagination = <
   console.log('rerenders2', rerenders2.current);
   console.log('rerenders4', rerenders4);
 
-  //if (onLoaded) onLoaded(searchPaginationQuery.data.data as Entry[]);
+  if (onLoaded) onLoaded(searchPaginationQuery.data.data as Entry[]);
   const paginationResponse = searchPaginationQuery.data;
   const { totalPages, currentPage: page } = paginationResponse;
 
@@ -109,7 +109,7 @@ export const Pagination = <
   };
 
   const SetPage = (newPage: number) => {
-    /*if (newPage === pagination?.index) return;
+    if (newPage === pagination?.index) return;
     navigate({
       search: (old: any) => {
         return {
@@ -122,11 +122,11 @@ export const Pagination = <
       },
       replace: true,
     });
-    if (onPageChanged) onPageChanged(newPage);*/
+    if (onPageChanged) onPageChanged(newPage);
   };
 
   const SetPageSize = (newPageSize: number) => {
-    /*if (newPageSize === pagination?.size) return;
+    if (newPageSize === pagination?.size) return;
     navigate({
       search: (old: any) => {
         return {
@@ -139,7 +139,7 @@ export const Pagination = <
       },
       replace: true,
     });
-    if (onPageSizeChanged) onPageSizeChanged(newPageSize);*/
+    if (onPageSizeChanged) onPageSizeChanged(newPageSize);
   };
 
   const handleChange = (newValue: OnChangeValue<PaginationPageSizeOption, false>) => {

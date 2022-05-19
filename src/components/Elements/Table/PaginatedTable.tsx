@@ -35,7 +35,10 @@ export const PaginatedTable = <
       <Pagination
         onPageChanged={onPageChanged}
         onPageSizeChanged={onPageSizeChanged}
-        onLoaded={setTableData}
+        onLoaded={(data: Entry[]) => {
+          setTableData(data);
+          onLoaded?.(data);
+        }}
         queryKeyName={queryKeyName}
         url={url}
         searchData={searchData}
