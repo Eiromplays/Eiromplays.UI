@@ -196,13 +196,13 @@ export function initReactQueryAuth<
     return <div>Unhandled status: {status}</div>;
   }
 
-  function useAuth() {
+  const useAuth = () => {
     const context = React.useContext(AuthContext);
     if (!context) {
       throw new Error(`useAuth must be used within an AuthProvider`);
     }
     return context;
-  }
+  };
 
   return { AuthProvider, AuthConsumer: AuthContext.Consumer, useAuth };
 }

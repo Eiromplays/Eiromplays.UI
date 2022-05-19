@@ -1,60 +1,128 @@
 import React from 'react';
 
 import { Spinner } from '@/components/Elements/Spinner';
-import { AuthUser, getUser } from '@/features/auth';
-import { initReactQueryAuth } from '@/providers/AuthProvider';
+import { AuthUser, getUser, GetUserProps } from '@/features/auth';
+import { AuthProviderConfig, initReactQueryAuth } from '@/providers/AuthProvider';
 
-async function loadUser(): Promise<AuthUser> {
-  const data = await getUser();
+export type LoadUserProps = GetUserProps;
 
-  return data as AuthUser;
-}
+const loadUser = async <User extends AuthUser = AuthUser>({
+  customClaims = [],
+}: LoadUserProps = {}): Promise<User> => {
+  const data = await getUser<User>({ customClaims: customClaims });
 
-async function loginFn() {
-  const user = await loadUser();
+  return data as User;
+};
 
-  return user;
-}
-
-async function login2faFn() {
-  const user = await loadUser();
-
-  return user;
-}
-
-async function registerFn() {
-  const user = await loadUser();
+const loginFn = async <User extends AuthUser = AuthUser>({
+  customClaims = [],
+}: LoadUserProps = {}) => {
+  const user = await loadUser<User>({ customClaims: customClaims });
 
   return user;
-}
+};
 
-async function logoutFn() {
-  const user = await loadUser();
+const login2faFn = async <User extends AuthUser = AuthUser>({
+  customClaims = [],
+}: LoadUserProps = {}) => {
+  const user = await loadUser<User>({ customClaims: customClaims });
+
+  return user;
+};
+
+const registerFn = async <User extends AuthUser = AuthUser>({
+  customClaims = [],
+}: LoadUserProps = {}) => {
+  const user = await loadUser<User>({ customClaims: customClaims });
+
+  return user;
+};
+
+const logoutFn = async <User extends AuthUser = AuthUser>({
+  customClaims = [],
+}: LoadUserProps = {}) => {
+  const user = await loadUser<User>({ customClaims: customClaims });
 
   if (user?.logoutUrl) {
     window.location.href = user.logoutUrl;
   }
-}
-
-const authConfig = {
-  loadUser,
-  loginFn,
-  login2faFn,
-  registerFn,
-  logoutFn,
-  LoaderComponent() {
-    return (
-      <div className="w-screen h-screen flex justify-center items-center">
-        <Spinner />
-      </div>
-    );
-  },
 };
 
-export const { AuthProvider, useAuth } = initReactQueryAuth<
-  AuthUser | null,
-  unknown,
-  unknown,
-  unknown,
-  unknown
->(authConfig);
+export type SetupAuthProps<User extends AuthUser = AuthUser> = {
+  children: React.ReactNode;
+  config?: AuthProviderConfig<User | null, unknown>;
+};
+
+export const InitializeAuth = <
+  User extends AuthUser = AuthUser,
+  LoginCredentialsDTO = unknown,
+  Login2faCredentialsDTO = unknown,
+  RegisterCredentialsDTO = unknown
+>(
+  {
+    config = {
+      loadUser() {
+        return loadUser<User>();
+      },
+      loginFn() {
+        return loginFn<User>();
+      },
+      login2faFn() {
+        return login2faFn<User>();
+      },
+      registerFn() {
+        return registerFn<User>();
+      },
+      logoutFn() {
+        return logoutFn<User>();
+      },
+      LoaderComponent() {
+        return (
+          <div className="w-screen h-screen flex justify-center items-center">
+            <Spinner />
+          </div>
+        );
+      },
+    },
+    children,
+  }: SetupAuthProps<User> = {
+    config: {
+      loadUser() {
+        return loadUser<User>();
+      },
+      loginFn() {
+        return loginFn<User>();
+      },
+      login2faFn() {
+        return login2faFn<User>();
+      },
+      registerFn() {
+        return registerFn<User>();
+      },
+      logoutFn() {
+        return logoutFn<User>();
+      },
+      LoaderComponent() {
+        return (
+          <div className="w-screen h-screen flex justify-center items-center">
+            <Spinner />
+          </div>
+        );
+      },
+    },
+    children: <></>,
+  }
+) => {
+  const { AuthProvider, useAuth: useAuth2 } = initReactQueryAuth<
+    User | null,
+    LoginCredentialsDTO,
+    Login2faCredentialsDTO,
+    RegisterCredentialsDTO
+  >(config);
+
+  useAuth = useAuth2;
+
+  return AuthProvider({ children: children });
+};
+
+export let useAuth: any;

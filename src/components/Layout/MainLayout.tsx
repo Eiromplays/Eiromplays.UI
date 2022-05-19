@@ -1,5 +1,4 @@
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import { Link } from '@tanstack/react-location';
 import clsx from 'clsx';
 import * as React from 'react';
 import {
@@ -15,7 +14,7 @@ import { MdOutlineDevicesOther, MdOutlineHistory } from 'react-icons/md';
 
 import { useAuth } from '@/lib/auth';
 
-import { Button } from '../Elements';
+import { Button, Link } from '../Elements';
 import { ThemeToggle } from '../Theme/ThemeToggle';
 
 type SideNavigationItem = {
@@ -23,7 +22,7 @@ type SideNavigationItem = {
   to: string;
   target?: string;
   externalLink?: boolean;
-  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
+  icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
 };
 
 type SideNavigationProps = {
@@ -47,9 +46,14 @@ const SideNavigation = ({
     },
   ],
 }: SideNavigationProps) => {
+  const navigationItems = items.filter(
+    (value, index, self) =>
+      index === self.findIndex((t) => t.name.toLowerCase() === value.name.toLowerCase())
+  );
+
   return (
     <>
-      {items.map((item) => {
+      {navigationItems.map((item) => {
         return item.externalLink ? (
           <a
             key={item.name}
@@ -57,13 +61,15 @@ const SideNavigation = ({
             target={item.target}
             className="hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 font-medium rounded-md bg-transparent text-gray-400"
           >
-            <item.icon
-              className={clsx(
-                'text-gray-400 group-hover:text-gray-300',
-                'mr-4 flex-shrink-0 h-6 w-6'
-              )}
-              aria-hidden="true"
-            />
+            {item.icon && (
+              <item.icon
+                className={clsx(
+                  'text-gray-400 group-hover:text-gray-300',
+                  'mr-4 flex-shrink-0 h-6 w-6'
+                )}
+                aria-hidden="true"
+              />
+            )}
             {item.name}
           </a>
         ) : (
@@ -84,13 +90,15 @@ const SideNavigation = ({
               exact: item.to === '.',
             }}
           >
-            <item.icon
-              className={clsx(
-                'text-gray-400 group-hover:text-gray-300',
-                'mr-4 flex-shrink-0 h-6 w-6'
-              )}
-              aria-hidden="true"
-            />
+            {item.icon && (
+              <item.icon
+                className={clsx(
+                  'text-gray-400 group-hover:text-gray-300',
+                  'mr-4 flex-shrink-0 h-6 w-6'
+                )}
+                aria-hidden="true"
+              />
+            )}
             {item.name}
           </Link>
         );
@@ -102,34 +110,57 @@ const SideNavigation = ({
 type UserNavigationItem = {
   name: string;
   to: string;
+  target?: string;
+  externalLink?: boolean;
   onClick?: () => void;
+  icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
 };
 
 type UserNavigationProps = {
   items?: UserNavigationItem[];
+  addProfileItem?: boolean;
   addSignOutItem?: boolean;
 };
 
 const UserNavigation = ({
-  items = [
-    {
-      name: 'Your Profile',
-      to: 'https://localhost:3000/app/profile',
-      onClick: () => {
-        window.location.href = 'https://localhost:3000/app/profile';
-      },
-    },
-  ],
+  items = [],
+  addProfileItem = true,
   addSignOutItem = true,
 }: UserNavigationProps) => {
   const { user, logout } = useAuth();
 
-  if (addSignOutItem)
-    items.push({
+  if (addProfileItem) {
+    const yourProfileItem: UserNavigationItem = {
+      name: 'Your Profile',
+      to: 'https://localhost:3000/app/profile',
+      externalLink: true,
+    };
+    if (
+      !items.some(
+        (item: UserNavigationItem) => item.name.toLowerCase() === yourProfileItem.name.toLowerCase()
+      )
+    )
+      items.push(yourProfileItem);
+  }
+
+  if (addSignOutItem) {
+    const signOutItem: UserNavigationItem = {
       name: 'Sign out',
       to: user?.logoutUrl || '',
       onClick: async () => await logout(),
-    });
+    };
+    if (
+      !items.some(
+        (item: UserNavigationItem) => item.name.toLowerCase() === signOutItem.name.toLowerCase()
+      )
+    )
+      items.push(signOutItem);
+  }
+
+  const navigationItems = items.filter(
+    (value, index, self) =>
+      index === self.findIndex((t) => t.name.toLowerCase() === value.name.toLowerCase())
+  );
 
   return (
     <Menu as="div" className="ml-3 relative">
@@ -171,20 +202,53 @@ const UserNavigation = ({
               className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-lighter-black ring-1 
               ring-black ring-opacity-5 focus:outline-none"
             >
-              {items.map((item) => (
+              {navigationItems.map((item) => (
                 <Menu.Item key={item.name}>
-                  {({ active }) => (
-                    <Link
-                      onClick={item.onClick}
-                      to={item.to}
-                      className={clsx(
-                        active ? 'bg-gray-100 dark:bg-gray-800' : '',
-                        'block px-4 py-2 text-sm text-gray-700 dark:text-white'
-                      )}
-                    >
-                      {item.name}
-                    </Link>
-                  )}
+                  {({ active }) =>
+                    item.externalLink ? (
+                      <a
+                        target={item.target}
+                        onClick={item.onClick}
+                        href={item.to}
+                        className={clsx(
+                          active ? 'bg-gray-100 dark:bg-gray-800' : '',
+                          'block px-4 py-2 text-sm text-gray-700 dark:text-white'
+                        )}
+                      >
+                        {item.icon && (
+                          <item.icon
+                            className={clsx(
+                              'text-gray-400 group-hover:text-gray-300',
+                              'mr-4 flex-shrink-0 h-6 w-6'
+                            )}
+                            aria-hidden="true"
+                          />
+                        )}
+                        {item.name}
+                      </a>
+                    ) : (
+                      <Link
+                        target={item.target}
+                        onClick={item.onClick}
+                        to={item.to}
+                        className={clsx(
+                          active ? 'bg-gray-100 dark:bg-gray-800' : '',
+                          'block px-4 py-2 text-sm text-gray-700 dark:text-white'
+                        )}
+                      >
+                        {item.icon && (
+                          <item.icon
+                            className={clsx(
+                              'text-gray-400 group-hover:text-gray-300',
+                              'mr-4 flex-shrink-0 h-6 w-6'
+                            )}
+                            aria-hidden="true"
+                          />
+                        )}
+                        {item.name}
+                      </Link>
+                    )
+                  }
                 </Menu.Item>
               ))}
             </Menu.Items>
@@ -195,12 +259,18 @@ const UserNavigation = ({
   );
 };
 
-type MobileSidebarProps = LogoProps & {
-  sidebarOpen: boolean;
-  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
+type MobileSidebarProps = LogoProps &
+  SideNavigationProps & {
+    sidebarOpen: boolean;
+    setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 
-const MobileSidebar = ({ sidebarOpen, setSidebarOpen, logo }: MobileSidebarProps) => {
+const MobileSidebar = ({
+  sidebarOpen,
+  setSidebarOpen,
+  logo,
+  items: sideNavigationItems,
+}: MobileSidebarProps) => {
   return (
     <Transition.Root show={sidebarOpen} as={React.Fragment}>
       <Dialog
@@ -255,7 +325,7 @@ const MobileSidebar = ({ sidebarOpen, setSidebarOpen, logo }: MobileSidebarProps
             </div>
             <div className="mt-5 flex-1 h-0 overflow-y-auto">
               <nav className="px-2 space-y-1">
-                <SideNavigation />
+                <SideNavigation items={sideNavigationItems} />
               </nav>
             </div>
           </div>
@@ -316,7 +386,12 @@ export const MainLayout = ({
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-100 dark:bg-gray-900">
-      <MobileSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} logo={logo} />
+      <MobileSidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        logo={logo}
+        items={sideBarNavigationItems}
+      />
       <Sidebar logo={logo} items={sideBarNavigationItems} />
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <div className="relative z-10 flex-shrink-0 flex h-16 bg-white dark:bg-gray-800 shadow">

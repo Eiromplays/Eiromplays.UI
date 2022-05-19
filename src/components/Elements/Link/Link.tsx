@@ -1,6 +1,6 @@
-import React from 'react';
-import clsx from 'clsx';
 import { Link as RouterLink, LinkProps } from '@tanstack/react-location';
+import clsx from 'clsx';
+import React from 'react';
 
 export const Link = ({ className, children, ...props }: LinkProps) => {
   return (

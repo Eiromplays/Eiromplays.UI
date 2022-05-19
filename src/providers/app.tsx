@@ -11,7 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import { Button, Spinner } from '@/components/Elements';
 
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthProvider, queryClient } from '@/lib';
+import { InitializeAuth, queryClient } from '@/lib';
 
 const ErrorFallback = () => {
   return (
@@ -51,7 +51,6 @@ type AppProviderProps<TGenerics extends DefaultLocationGenerics = DefaultLocatio
   routesFunctions?: () => Route<TGenerics>;
   location?: ReactLocation<TGenerics>;
   createDefaultOutlet?: boolean;
-  authProvider?: JSX.Element;
   children?: React.ReactNode;
 };
 
@@ -60,7 +59,6 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
   routesFunctions,
   location = new ReactLocation<TGenerics>(),
   createDefaultOutlet = true,
-  authProvider,
   children,
 }: AppProviderProps<TGenerics>) => {
   return (
@@ -74,8 +72,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-            {authProvider && { <authProvider></authProvider> }}
-            <AuthProvider>
+            <InitializeAuth>
               <Router
                 location={location}
                 routes={routes || (routesFunctions && routesFunctions())}
@@ -109,7 +106,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
                 {createDefaultOutlet && <Outlet />}
                 {children}
               </Router>
-            </AuthProvider>
+            </InitializeAuth>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>

@@ -4,7 +4,13 @@ import { formatDate } from '@/utils/format';
 
 import { AuthUser } from '../types';
 
-export const getUser = async (): Promise<AuthUser | null> => {
+export type GetUserProps = {
+  customClaims?: Claim[];
+};
+
+export const getUser = async <User extends AuthUser = AuthUser>({
+  customClaims = [],
+}: GetUserProps = {}): Promise<User | null> => {
   const userDiagnosis = await axios.get('/bff/diagnostics');
   if (userDiagnosis) console.log(userDiagnosis);
 
@@ -18,7 +24,7 @@ export const getUser = async (): Promise<AuthUser | null> => {
     userSessionInfo?.find((claim: Claim) => claim.type === 'name') ??
     userSessionInfo?.find((claim: Claim) => claim.type === 'sub');
 
-  const user: AuthUser = {
+  const currentUser: any = {
     id: userSessionInfo?.find((claim: Claim) => claim.type === 'sub')?.value ?? '',
     sessionId: userSessionInfo?.find((claim: Claim) => claim.type === 'sid')?.value ?? '',
     username: nameDictionary?.value ?? '',
@@ -31,7 +37,7 @@ export const getUser = async (): Promise<AuthUser | null> => {
     roles:
       (userSessionInfo
         ?.filter((claim: Claim) => claim.type === 'role')
-        .map((claim: Claim) => claim.value.toLowerCase()) as unknown as string[]) ?? [],
+        .map((claim: Claim) => claim.value.toLowerCase()) as string[]) ?? [],
     logoutUrl:
       userSessionInfo?.find((claim: Claim) => claim.type === 'bff:logout_url')?.value ??
       '/bff/logout',
@@ -43,7 +49,13 @@ export const getUser = async (): Promise<AuthUser | null> => {
     ),
   };
 
-  if (user.id) return user;
+  customClaims.forEach((claim: Claim) => {
+    const userClaim = userSessionInfo?.find((userClaim: Claim) => userClaim.type === claim.type);
+    if (!userClaim) return;
+    currentUser[claim.type] = userClaim.value;
+  });
+
+  if (currentUser?.id) return currentUser as User;
 
   return null;
 };
@@ -54,10 +66,14 @@ export const silentLogin = () => {
     process.env.VUE_APP_USE_SILENT_LOGIN ||
     import.meta.env.VITE_USE_SILENT_LOGIN;
 
+  console.log('useSilentLogin', useSilentLogin);
+
   const redirectToLoginIfSilentLoginFailed =
     process.env.REACT_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
     process.env.VUE_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
     import.meta.env.VITE_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED;
+
+  console.log('redirectToLoginIfSilentLoginFailed', redirectToLoginIfSilentLoginFailed);
 
   if (useSilentLogin?.toLowerCase() === 'false') return;
 
