@@ -5,8 +5,6 @@ import { PaginationFilter, PaginationResponse } from '@/types';
 
 import { BaseEntry } from '../Table';
 
-export type SearchPaginationDTO = PaginationFilter;
-
 export const searchPagination = <
   SearchPaginationDTO extends PaginationFilter,
   Entry extends BaseEntry | any
@@ -19,14 +17,14 @@ export const searchPagination = <
 
 type QueryFnType = typeof searchPagination;
 
-export type UseSearchPaginationOptions<SearchPaginationDTO extends PaginationFilter> = {
+export type UsePaginationProps<SearchPaginationDTO extends PaginationFilter> = {
   queryKeyName: string;
   url: string;
   searchData: SearchPaginationDTO;
   config?: QueryConfig<QueryFnType>;
 };
 
-export const useSearchPagination = <
+export const usePagination = <
   SearchPaginationDTO extends PaginationFilter,
   Entry extends BaseEntry | any
 >({
@@ -34,7 +32,7 @@ export const useSearchPagination = <
   url,
   searchData,
   config = { keepPreviousData: true, staleTime: 5000 },
-}: UseSearchPaginationOptions<SearchPaginationDTO>) => {
+}: UsePaginationProps<SearchPaginationDTO>) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     ...config,
     queryKey: [queryKeyName, searchData.pageNumber, searchData.pageSize],

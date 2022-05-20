@@ -1,3 +1,5 @@
+import { BaseEntry } from '..';
+
 export type BaseEntity = {
   id: string;
   createdAt: number;
@@ -34,8 +36,8 @@ export type Search = {
   keyword?: string;
 };
 
-export type PaginationResponse<T> = {
-  data: T[];
+export type PaginationResponse<TItem extends BaseEntry | any> = {
+  data: TItem[];
   currentPage: number;
   totalPages: number;
   totalCount: number;
@@ -43,3 +45,6 @@ export type PaginationResponse<T> = {
   hasPreviousPage: boolean;
   hasNextPage: boolean;
 };
+
+export type Updater<T> = T | ((old: T) => T);
+export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void;

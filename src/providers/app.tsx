@@ -11,7 +11,7 @@ import { ToastContainer } from 'react-toastify';
 import { Button, Spinner } from '@/components/Elements';
 
 import 'react-toastify/dist/ReactToastify.css';
-import { InitializeAuth, queryClient } from '@/lib';
+import { AuthProvider, queryClient } from '@/lib';
 
 const ErrorFallback = () => {
   return (
@@ -72,7 +72,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-            <InitializeAuth>
+            <AuthProvider>
               <Router
                 location={location}
                 routes={routes || (routesFunctions && routesFunctions())}
@@ -106,7 +106,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
                 {createDefaultOutlet && <Outlet />}
                 {children}
               </Router>
-            </InitializeAuth>
+            </AuthProvider>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>

@@ -1,15 +1,17 @@
 import React from 'react';
 
-import { PaginationFilter } from '@/types';
+import { PaginationFilter, PaginationResponse } from '@/types';
 
-import { Pagination, PaginationProps } from '../Pagination';
+import { Pagination } from '../Pagination';
+import { usePagination, UsePaginationProps } from '../Pagination/usePagination';
+import { Spinner } from '../Spinner';
 
 import { BaseEntry, Table, TableColumn } from './Table';
 
 export type PaginatedTableProps<
   SearchPaginationDTO extends PaginationFilter,
-  Entry
-> = PaginationProps<SearchPaginationDTO, Entry> & {
+  Entry extends BaseEntry | any
+> = UsePaginationProps<SearchPaginationDTO> & {
   columns: TableColumn<Entry>[];
 };
 
@@ -20,30 +22,32 @@ export const PaginatedTable = <
   queryKeyName,
   url,
   searchData,
+  config,
   columns,
-  onPageChanged,
-  onPageSizeChanged,
-  onLoaded,
 }: PaginatedTableProps<SearchPaginationDTO, Entry>) => {
-  const [data, setData] = React.useState<Entry[]>([]);
-  const setTableData = React.useCallback((data: Entry[]) => {
-    setData(data);
-  }, []);
+  const paginationQuery = usePagination({
+    queryKeyName: queryKeyName,
+    url: url,
+    searchData: searchData,
+    config: config,
+  });
+
+  if (paginationQuery.isLoading) {
+    return (
+      <div className="w-full h-48 flex justify-center items-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!paginationQuery.data) return null;
+
+  const paginationResponse = paginationQuery.data as PaginationResponse<Entry>;
 
   return (
     <div>
-      <Pagination
-        onPageChanged={onPageChanged}
-        onPageSizeChanged={onPageSizeChanged}
-        onLoaded={(data: Entry[]) => {
-          setTableData(data);
-          onLoaded?.(data);
-        }}
-        queryKeyName={queryKeyName}
-        url={url}
-        searchData={searchData}
-      />
-      <Table data={data} columns={columns} />
+      <Table data={paginationResponse.data} columns={columns} />
+      <Pagination paginationResponse={paginationResponse} />
     </div>
   );
 };

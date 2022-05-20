@@ -6,97 +6,34 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
-import { queryClient } from '@/lib';
 import { DefaultLocationGenerics } from '@/providers';
-import { PaginationFilter } from '@/types';
+import { PaginationResponse } from '@/types';
 
 import { Button } from '../Button';
-import { Spinner } from '../Spinner';
-import { BaseEntry } from '../Table';
 
 import { PaginationPageSizeOption, paginationPageSizeOptions } from './data';
 import { EmptyPageButton } from './EmptyPageButton';
 import { PageButton } from './PageButton';
-import { searchPagination, useSearchPagination, UseSearchPaginationOptions } from './usePagination';
 
-export type PaginationProps<
-  SearchPaginationDTO extends PaginationFilter,
-  Entry
-> = UseSearchPaginationOptions<SearchPaginationDTO> & {
+export type PaginationProps<Entry> = {
+  paginationResponse: PaginationResponse<Entry>;
   onPageChanged?: (page: number) => void;
   onPageSizeChanged?: (pageSize: number) => void;
-  onLoaded?: (data: Entry[]) => void;
 };
 
 export const Pagination = <
-  SearchPaginationDTO extends PaginationFilter,
-  Entry extends BaseEntry | any,
+  Entry,
   TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >({
-  queryKeyName,
-  url,
-  searchData,
-  config = { keepPreviousData: true, enabled: false },
+  paginationResponse,
   onPageChanged,
   onPageSizeChanged,
-  onLoaded,
-}: PaginationProps<SearchPaginationDTO, Entry>) => {
+}: PaginationProps<Entry>) => {
+  const { totalPages, currentPage: page } = paginationResponse;
   const navigate = useNavigate<TGenerics>();
   const { pagination } = useSearch<TGenerics>();
   const currentPage = pagination?.index ?? 1;
   const currentSize = pagination?.size ?? 10;
-  const rerenders = React.useRef(0);
-  const rerenders2 = React.useRef(0);
-  let rerenders3 = 0;
-  let rerenders4 = 0;
-
-  const searchPaginationQuery = useSearchPagination<SearchPaginationDTO, Entry>({
-    queryKeyName: queryKeyName,
-    url: url,
-    searchData: searchData,
-    config: config,
-  });
-  console.log('currentPage', currentPage);
-
-  React.useEffect(() => {
-    if (searchPaginationQuery.data?.hasNextPage) {
-      const nextPage = (pagination?.index ?? 1) + 1;
-      const prefetchData = searchData;
-      prefetchData.pageNumber = nextPage;
-      queryClient.prefetchQuery([queryKeyName, nextPage, currentSize], () =>
-        searchPagination(url, prefetchData)
-      );
-    }
-  }, [
-    currentSize,
-    pagination?.index,
-    queryKeyName,
-    searchData,
-    searchPaginationQuery.data?.hasNextPage,
-    url,
-  ]);
-
-  rerenders.current += 1;
-  rerenders3 += 1;
-  console.log('rerenders', rerenders.current);
-  console.log('rerenders3', rerenders3);
-  if (searchPaginationQuery.isLoading) {
-    return (
-      <div className="w-full h-48 flex justify-center items-center">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
-  if (!searchPaginationQuery.data) return null;
-  rerenders2.current += 1;
-  rerenders4 += 1;
-  console.log('rerenders2', rerenders2.current);
-  console.log('rerenders4', rerenders4);
-
-  if (onLoaded) onLoaded(searchPaginationQuery.data.data as Entry[]);
-  const paginationResponse = searchPaginationQuery.data;
-  const { totalPages, currentPage: page } = paginationResponse;
 
   const NextPage = () => {
     if (!paginationResponse.hasNextPage) return;
