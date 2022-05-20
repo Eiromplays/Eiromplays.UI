@@ -1,9 +1,10 @@
 import React from 'react';
 
+import { DefaultLocationGenerics } from '@/providers';
 import { PaginationFilter, PaginationResponse } from '@/types';
 
 import { Pagination } from '../Pagination';
-import { usePagination, UsePaginationProps } from '../Pagination/usePagination';
+import { useSearchPagination, UseSearchPaginationProps } from '../Pagination/useSearchPagination';
 import { Spinner } from '../Spinner';
 
 import { BaseEntry, Table, TableColumn } from './Table';
@@ -11,13 +12,14 @@ import { BaseEntry, Table, TableColumn } from './Table';
 export type PaginatedTableProps<
   SearchPaginationDTO extends PaginationFilter,
   Entry extends BaseEntry | any
-> = UsePaginationProps<SearchPaginationDTO> & {
+> = UseSearchPaginationProps<SearchPaginationDTO> & {
   columns: TableColumn<Entry>[];
 };
 
 export const PaginatedTable = <
   SearchPaginationDTO extends PaginationFilter,
-  Entry extends BaseEntry | any
+  Entry extends BaseEntry | any,
+  TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >({
   queryKeyName,
   url,
@@ -25,7 +27,7 @@ export const PaginatedTable = <
   config,
   columns,
 }: PaginatedTableProps<SearchPaginationDTO, Entry>) => {
-  const paginationQuery = usePagination({
+  const paginationQuery = useSearchPagination({
     queryKeyName: queryKeyName,
     url: url,
     searchData: searchData,
@@ -47,7 +49,11 @@ export const PaginatedTable = <
   return (
     <div>
       <Table data={paginationResponse.data} columns={columns} />
-      <Pagination paginationResponse={paginationResponse} />
+      <Pagination<SearchPaginationDTO, Entry, TGenerics>
+        queryKeyName={queryKeyName}
+        url={url}
+        searchData={searchData}
+      />
     </div>
   );
 };

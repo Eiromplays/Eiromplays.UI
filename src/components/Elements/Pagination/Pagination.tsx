@@ -1,83 +1,55 @@
 // Original source code: https://github.com/estevanmaito/windmill-react-ui/blob/master/src/Pagination.tsx AND https://javascript.plainenglish.io/building-a-pagination-component-in-react-with-typescript-2e7f7b62b35d
 
-import { useNavigate, useSearch } from '@tanstack/react-location';
 import React from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { DefaultLocationGenerics } from '@/providers';
-import { PaginationResponse } from '@/types';
+import { BaseEntity, PaginationFilter } from '@/types';
 
 import { Button } from '../Button';
 
 import { PaginationPageSizeOption, paginationPageSizeOptions } from './data';
 import { EmptyPageButton } from './EmptyPageButton';
 import { PageButton } from './PageButton';
+import { usePaginationControls, UsePaginationControlsProps } from './usePaginationControls';
 
-export type PaginationProps<Entry> = {
-  paginationResponse: PaginationResponse<Entry>;
-  onPageChanged?: (page: number) => void;
-  onPageSizeChanged?: (pageSize: number) => void;
-};
+export type PaginationProps<SearchPaginationDTO extends PaginationFilter> =
+  UsePaginationControlsProps<SearchPaginationDTO> & {
+    onPageChanged?: (page: number) => void;
+    onPageSizeChanged?: (pageSize: number) => void;
+  };
 
 export const Pagination = <
-  Entry,
+  SearchPaginationDTO extends PaginationFilter,
+  Entry extends BaseEntity | any,
   TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >({
-  paginationResponse,
+  queryKeyName,
+  url,
+  searchData,
   onPageChanged,
   onPageSizeChanged,
-}: PaginationProps<Entry>) => {
-  const { totalPages, currentPage: page } = paginationResponse;
-  const navigate = useNavigate<TGenerics>();
-  const { pagination } = useSearch<TGenerics>();
-  const currentPage = pagination?.index ?? 1;
-  const currentSize = pagination?.size ?? 10;
+}: PaginationProps<SearchPaginationDTO>) => {
+  const {
+    SetPage,
+    SetPageSize,
+    NextPage,
+    PreviousPage,
+    currentPage,
+    currentSize,
+    totalPages,
+    paginationResponse,
+  } = usePaginationControls<SearchPaginationDTO, Entry, TGenerics>({
+    onPageChanged: onPageChanged,
+    onPageSizeChanged: onPageSizeChanged,
+    queryKeyName: queryKeyName,
+    url: url,
+    searchData: searchData,
+  });
 
-  const NextPage = () => {
-    if (!paginationResponse.hasNextPage) return;
-    SetPage(page + 1);
-  };
-
-  const PreviousPage = () => {
-    if (!paginationResponse.hasPreviousPage) return;
-    SetPage(page - 1);
-  };
-
-  const SetPage = (newPage: number) => {
-    if (newPage === pagination?.index) return;
-    navigate({
-      search: (old: any) => {
-        return {
-          ...old,
-          pagination: {
-            ...old?.pagination,
-            index: newPage,
-          },
-        };
-      },
-      replace: true,
-    });
-    if (onPageChanged) onPageChanged(newPage);
-  };
-
-  const SetPageSize = (newPageSize: number) => {
-    if (newPageSize === pagination?.size) return;
-    navigate({
-      search: (old: any) => {
-        return {
-          ...old,
-          pagination: {
-            ...old?.pagination,
-            size: newPageSize,
-          },
-        };
-      },
-      replace: true,
-    });
-    if (onPageSizeChanged) onPageSizeChanged(newPageSize);
-  };
+  const { currentPage: page } = paginationResponse;
 
   const handleChange = (newValue: OnChangeValue<PaginationPageSizeOption, false>) => {
     SetPageSize(newValue?.value || 10);

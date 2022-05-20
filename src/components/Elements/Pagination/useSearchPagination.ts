@@ -17,14 +17,14 @@ export const searchPagination = <
 
 type QueryFnType = typeof searchPagination;
 
-export type UsePaginationProps<SearchPaginationDTO extends PaginationFilter> = {
+export type UseSearchPaginationProps<SearchPaginationDTO extends PaginationFilter> = {
   queryKeyName: string;
   url: string;
   searchData: SearchPaginationDTO;
   config?: QueryConfig<QueryFnType>;
 };
 
-export const usePagination = <
+export const useSearchPagination = <
   SearchPaginationDTO extends PaginationFilter,
   Entry extends BaseEntry | any
 >({
@@ -32,7 +32,7 @@ export const usePagination = <
   url,
   searchData,
   config = { keepPreviousData: true, staleTime: 5000 },
-}: UsePaginationProps<SearchPaginationDTO>) => {
+}: UseSearchPaginationProps<SearchPaginationDTO>) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     ...config,
     queryKey: [queryKeyName, searchData.pageNumber, searchData.pageSize],
