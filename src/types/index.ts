@@ -1,7 +1,8 @@
-import { BaseEntry } from '..';
+export type BaseEntry = {
+  id?: string;
+};
 
-export type BaseEntity = {
-  id: string;
+export type BaseEntity = BaseEntry & {
   createdAt: number;
 };
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import { HiOutlineArchive } from 'react-icons/hi';
 
+import { BaseEntry } from '@/types';
+
 export type TableColumn<Entry> = {
   title: string;
   field: keyof Entry;
@@ -10,10 +12,6 @@ export type TableColumn<Entry> = {
 export type TableProps<Entry> = {
   data: Entry[];
   columns: TableColumn<Entry>[];
-};
-
-export type BaseEntry = {
-  id?: string;
 };
 
 export const Table = <Entry extends BaseEntry | any>({ data, columns }: TableProps<Entry>) => {

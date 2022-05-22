@@ -3,7 +3,7 @@ import React from 'react';
 
 import { queryClient } from '@/lib';
 import { DefaultLocationGenerics } from '@/providers';
-import { BaseEntity, PaginationFilter, PaginationResponse } from '@/types';
+import { BaseEntry, PaginationFilter, PaginationResponse } from '@/types';
 
 import {
   searchPagination,
@@ -11,16 +11,21 @@ import {
   UseSearchPaginationProps,
 } from './useSearchPagination';
 
-export type UsePaginationControlsProps<SearchPaginationDTO extends PaginationFilter> =
-  UseSearchPaginationProps<SearchPaginationDTO> & {
-    onPageChanged?: (page: number) => void;
-    onPageSizeChanged?: (pageSize: number) => void;
-    prefetchNextPage?: boolean;
-  };
-
-export const usePaginationControls = <
+export type UsePaginationProps<
   SearchPaginationDTO extends PaginationFilter,
-  Entry extends BaseEntity | any,
+  Entry extends BaseEntry | any
+> = UseSearchPaginationProps<SearchPaginationDTO, Entry> & {
+  onPageChanged?: (page: number) => void;
+  onPageSizeChanged?: (pageSize: number) => void;
+  prefetchNextPage?: boolean;
+};
+
+export const defaultPageSize = 10;
+export const defaultPageIndex = 1;
+
+export const usePagination = <
+  SearchPaginationDTO extends PaginationFilter,
+  Entry extends BaseEntry | any,
   TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >({
   searchData,
@@ -30,13 +35,14 @@ export const usePaginationControls = <
   onPageChanged,
   onPageSizeChanged,
   prefetchNextPage = true,
-}: UsePaginationControlsProps<SearchPaginationDTO>) => {
+}: UsePaginationProps<SearchPaginationDTO, Entry>) => {
   const searchPaginationQuery = useSearchPagination<SearchPaginationDTO, Entry>({
     queryKeyName: queryKeyName,
     url: url,
     searchData: searchData,
     config: config,
   });
+
   const navigate = useNavigate<TGenerics>();
   const { pagination } = useSearch<TGenerics>();
 
@@ -44,8 +50,8 @@ export const usePaginationControls = <
 
   const { totalPages, currentPage: page } = paginationResponse;
 
-  const currentPage = pagination?.index ?? 1;
-  const currentSize = pagination?.size ?? 10;
+  const currentPage = pagination?.index ?? defaultPageIndex;
+  const currentSize = pagination?.size ?? defaultPageSize;
 
   React.useEffect(() => {
     if (prefetchNextPage && paginationResponse.hasNextPage) {
@@ -68,40 +74,57 @@ export const usePaginationControls = <
     SetPage(page - 1);
   };
 
-  const SetPage = (newPage: number) => {
-    if (newPage === currentPage) return;
+  const SetPage = React.useCallback(
+    (newPage: number) => {
+      if (newPage > totalPages) newPage = totalPages;
 
-    navigate({
-      search: (old: any) => {
-        return {
-          ...old,
-          pagination: {
-            ...old?.pagination,
-            index: newPage,
-          },
-        };
-      },
-      replace: true,
-    });
-    if (onPageChanged) onPageChanged(newPage);
-  };
+      if (newPage === currentPage) return;
 
-  const SetPageSize = (newPageSize: number) => {
-    if (newPageSize === currentSize) return;
-    navigate({
-      search: (old: any) => {
-        return {
-          ...old,
-          pagination: {
-            ...old?.pagination,
-            size: newPageSize,
-          },
-        };
-      },
-      replace: true,
-    });
-    if (onPageSizeChanged) onPageSizeChanged(newPageSize);
-  };
+      navigate({
+        search: (old: any) => {
+          return {
+            ...old,
+            pagination: {
+              ...old?.pagination,
+              index: newPage,
+            },
+          };
+        },
+        replace: true,
+      });
+
+      onPageChanged?.(newPage);
+    },
+    [currentPage, navigate, onPageChanged, totalPages]
+  );
+
+  const SetPageSize = React.useCallback(
+    (newPageSize: number) => {
+      if (newPageSize === currentSize) return;
+
+      navigate({
+        search: (old: any) => {
+          return {
+            ...old,
+            pagination: {
+              ...old?.pagination,
+              size: newPageSize,
+            },
+          };
+        },
+        replace: true,
+      });
+
+      onPageSizeChanged?.(newPageSize);
+    },
+    [currentSize, navigate, onPageSizeChanged]
+  );
+
+  React.useEffect(() => {
+    if (currentPage > totalPages) {
+      SetPage(totalPages);
+    }
+  }, [currentPage, totalPages, SetPage]);
 
   return {
     NextPage,

@@ -6,24 +6,23 @@ import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { DefaultLocationGenerics } from '@/providers';
-import { BaseEntity, PaginationFilter } from '@/types';
+import { BaseEntry, PaginationFilter } from '@/types';
 
 import { Button } from '../Button';
 
 import { PaginationPageSizeOption, paginationPageSizeOptions } from './data';
 import { EmptyPageButton } from './EmptyPageButton';
 import { PageButton } from './PageButton';
-import { usePaginationControls, UsePaginationControlsProps } from './usePaginationControls';
+import { defaultPageSize, usePagination, UsePaginationProps } from './usePagination';
 
-export type PaginationProps<SearchPaginationDTO extends PaginationFilter> =
-  UsePaginationControlsProps<SearchPaginationDTO> & {
-    onPageChanged?: (page: number) => void;
-    onPageSizeChanged?: (pageSize: number) => void;
-  };
+export type PaginationProps<
+  SearchPaginationDTO extends PaginationFilter,
+  Entry extends BaseEntry | any
+> = UsePaginationProps<SearchPaginationDTO, Entry>;
 
 export const Pagination = <
   SearchPaginationDTO extends PaginationFilter,
-  Entry extends BaseEntity | any,
+  Entry extends BaseEntry | any,
   TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >({
   queryKeyName,
@@ -31,7 +30,7 @@ export const Pagination = <
   searchData,
   onPageChanged,
   onPageSizeChanged,
-}: PaginationProps<SearchPaginationDTO>) => {
+}: PaginationProps<SearchPaginationDTO, Entry>) => {
   const {
     SetPage,
     SetPageSize,
@@ -41,7 +40,7 @@ export const Pagination = <
     currentSize,
     totalPages,
     paginationResponse,
-  } = usePaginationControls<SearchPaginationDTO, Entry, TGenerics>({
+  } = usePagination<SearchPaginationDTO, Entry, TGenerics>({
     onPageChanged: onPageChanged,
     onPageSizeChanged: onPageSizeChanged,
     queryKeyName: queryKeyName,
@@ -52,13 +51,13 @@ export const Pagination = <
   const { currentPage: page } = paginationResponse;
 
   const handleChange = (newValue: OnChangeValue<PaginationPageSizeOption, false>) => {
-    SetPageSize(newValue?.value || 10);
+    SetPageSize(newValue?.value || defaultPageSize);
   };
 
   const handleInputChange = (newValue: string) => {
     if (!newValue) return;
 
-    SetPageSize(parseInt(newValue, 10) || 10);
+    SetPageSize(parseInt(newValue, 10) || defaultPageSize);
   };
 
   return (
