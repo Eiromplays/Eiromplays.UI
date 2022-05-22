@@ -7,12 +7,15 @@ type LayoutProps = {
   logo?: string | undefined;
   children: React.ReactNode;
   title: string;
+  description?: string;
 };
 
-export const Layout = ({ children, title, logo }: LayoutProps) => {
+export const Layout = ({ children, title, logo, description }: LayoutProps) => {
   return (
     <>
-      <Head title={title} />
+      <Head title={title} description={description}>
+        <title>{title}</title>
+      </Head>
       <div className="min-h-screen bg-gray-50 dark:bg-black flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center">

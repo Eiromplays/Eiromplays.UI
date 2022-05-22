@@ -5,27 +5,19 @@ import { AuthUser, getUser } from '@/features/auth';
 import { AuthProviderConfig, initReactQueryAuth } from '@/providers/AuthProvider';
 
 async function loadUser() {
-  const data = await getUser();
-
-  return data;
+  return await getUser();
 }
 
 async function loginFn() {
-  const user = await loadUser();
-
-  return user;
+  return await loadUser();
 }
 
 async function login2faFn() {
-  const user = await loadUser();
-
-  return user;
+  return await loadUser();
 }
 
 async function registerFn() {
-  const user = await loadUser();
-
-  return user;
+  return await loadUser();
 }
 
 async function logoutFn() {
@@ -52,7 +44,7 @@ const authConfig = {
 };
 
 export type InitializeAuthProps<User extends AuthUser = AuthUser> = {
-  authConfig: AuthProviderConfig<User | null, unknown>;
+  authConfig: AuthProviderConfig<User | null>;
 };
 
 export const initializeAuth = <

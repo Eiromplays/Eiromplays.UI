@@ -37,7 +37,7 @@ export const ImageCropper = ({
           unit: '%',
           width: 40,
         },
-        1 / 1,
+        1,
         width,
         height
       ),
@@ -75,7 +75,7 @@ export const ImageCropper = ({
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
             onComplete={(c) => setCompletedCrop(c)}
-            aspect={1 / 1}
+            aspect={1}
           >
             <img
               alt={`Cropped ${fileName}`}

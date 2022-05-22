@@ -1,14 +1,14 @@
 import './index.scss';
 
-export * from '@/components/Elements/index';
-export * from '@/components/Form/index';
-export * from '@/components/Head/index';
-export * from '@/components/Images/index';
-export * from '@/components/Layout/index';
+export * from '@/components/Elements';
+export * from '@/components/Form';
+export * from '@/components/Head';
+export * from '@/components/Images';
+export * from '@/components/Layout';
 export * from '@/components/Theme';
-export * from '@/features/auth';
-export * from '@/hooks/index';
-export * from '@/lib/index';
-export * from '@/providers/index';
-export * from '@/types/index';
-export * from '@/utils/index';
+export * from '@/features';
+export * from '@/hooks';
+export * from '@/lib';
+export * from '@/providers';
+export * from '@/types';
+export * from '@/utils';

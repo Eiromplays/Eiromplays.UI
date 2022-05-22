@@ -19,7 +19,9 @@ export const ContentLayout = ({
 }: ContentLayoutProps) => {
   return (
     <>
-      <Head title={title} description={description} />
+      <Head title={title} description={description}>
+        <title>{title}</title>
+      </Head>
       <div className="py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-200">{title}</h1>

@@ -17,7 +17,7 @@ export type UsePaginationProps<
 > = UseSearchPaginationProps<SearchPaginationDTO, Entry> & {
   onPageChanged?: (page: number) => void;
   onPageSizeChanged?: (pageSize: number) => void;
-  prefetchNextPage?: boolean;
+  shouldPrefetchNextPage?: boolean;
 };
 
 export const defaultPageSize = 10;
@@ -34,7 +34,7 @@ export const usePagination = <
   config,
   onPageChanged,
   onPageSizeChanged,
-  prefetchNextPage = true,
+  shouldPrefetchNextPage = true,
 }: UsePaginationProps<SearchPaginationDTO, Entry>) => {
   const searchPaginationQuery = useSearchPagination<SearchPaginationDTO, Entry>({
     queryKeyName: queryKeyName,
@@ -54,15 +54,19 @@ export const usePagination = <
   const currentSize = pagination?.size ?? defaultPageSize;
 
   React.useEffect(() => {
-    if (prefetchNextPage && paginationResponse.hasNextPage) {
+    const prefetchNextPage = async () => {
+      if (!shouldPrefetchNextPage || !paginationResponse.hasNextPage) return;
       const prefetchSearchData = { ...searchData };
       const prefetchPage = currentPage + 1;
       prefetchSearchData.pageNumber = prefetchPage;
-      queryClient.prefetchQuery([queryKeyName, prefetchPage, prefetchSearchData.pageSize], () =>
-        searchPagination(url, prefetchSearchData)
+      await queryClient.prefetchQuery(
+        [queryKeyName, prefetchPage, prefetchSearchData.pageSize],
+        () => () => () => searchPagination(url, prefetchSearchData)
       );
-    }
-  }, [prefetchNextPage, paginationResponse, queryKeyName, searchData, url, currentPage]);
+    };
+
+    prefetchNextPage().catch(console.error);
+  }, [shouldPrefetchNextPage, paginationResponse, queryKeyName, searchData, url, currentPage]);
 
   const NextPage = () => {
     if (!paginationResponse.hasNextPage) return;

@@ -1,5 +1,5 @@
-import React from 'react';
 import clsx from 'clsx';
+import React from 'react';
 
 const sizes = {
   sm: 'h-4 w-4',

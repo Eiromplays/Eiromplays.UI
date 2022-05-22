@@ -12,10 +12,10 @@ import {
 } from 'react-icons/hi';
 import { MdOutlineDevicesOther, MdOutlineHistory } from 'react-icons/md';
 
+import { ThemeToggle } from '@/components/Theme';
 import { useAuth } from '@/lib/auth';
 
 import { Button, Link } from '../Elements';
-import { ThemeToggle } from '../Theme/ThemeToggle';
 
 type SideNavigationItem = {
   name: string;

@@ -1,6 +1,6 @@
-import React from 'react';
 import createDOMPurify from 'dompurify';
 import { marked } from 'marked';
+import React from 'react';
 
 const DOMPurify = createDOMPurify(window);
 

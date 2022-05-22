@@ -7,7 +7,7 @@ import { ZodType, ZodTypeDef } from 'zod';
 type FormProps<TFormValues, Schema> = {
   className?: string;
   onSubmit: SubmitHandler<TFormValues>;
-  children: (methods: UseFormReturn<TFormValues, any>) => React.ReactNode;
+  children: (methods: UseFormReturn<TFormValues>) => React.ReactNode;
   options?: UseFormProps<TFormValues>;
   id?: string;
   schema?: Schema;
@@ -15,7 +15,7 @@ type FormProps<TFormValues, Schema> = {
   files?: FileList[];
 };
 
-// Return a array with FileList's using watch method and checking if it is a file
+// Return an array with FileList's using watch method and checking if it is a file
 export const Form = <
   TFormValues extends Record<string, unknown> = Record<string, unknown>,
   Schema extends ZodType<unknown, ZodTypeDef, unknown> = ZodType<unknown, ZodTypeDef, unknown>

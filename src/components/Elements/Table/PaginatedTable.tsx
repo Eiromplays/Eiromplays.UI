@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { useSearchPagination } from '@/components/Elements';
 import { DefaultLocationGenerics } from '@/providers';
 import { BaseEntry, PaginationFilter } from '@/types';
 
 import { Pagination, PaginationProps } from '../Pagination';
-import { useSearchPagination } from '../Pagination/useSearchPagination';
 import { Spinner } from '../Spinner';
 
 import { Table, TableColumn } from './Table';
