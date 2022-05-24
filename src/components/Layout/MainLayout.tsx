@@ -121,12 +121,22 @@ type UserNavigationProps = {
   items?: UserNavigationItem[];
   addProfileItem?: boolean;
   addSignOutItem?: boolean;
+  customButtons?: React.ReactNode;
 };
 
 const UserNavigation = ({
   items = [],
   addProfileItem = true,
   addSignOutItem = true,
+  customButtons = (
+    <Button
+      className="max-w-xs bg-gray-200 dark:bg-gray-600 p-2 flex items-center text-sm rounded-full
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      onClick={() => (window.location.href = 'https://localhost:3000')}
+    >
+      IdentityServer
+    </Button>
+  ),
 }: UserNavigationProps) => {
   const { user, logout } = useAuth();
 
@@ -168,13 +178,7 @@ const UserNavigation = ({
       {({ open }) => (
         <>
           <div className="flex">
-            <Button
-              className="max-w-xs bg-gray-200 dark:bg-gray-600 p-2 flex items-center text-sm rounded-full 
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              onClick={() => (window.location.href = 'https://localhost:3000')}
-            >
-              IdentityServer
-            </Button>
+            {customButtons}
             <ThemeToggle />
             <Menu.Button
               className="max-w-xs bg-gray-200 dark:bg-gray-600 p-2 flex items-center text-sm rounded-full 
