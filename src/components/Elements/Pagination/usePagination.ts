@@ -50,8 +50,8 @@ export const usePagination = <
 
   const { totalPages, currentPage: page } = paginationResponse;
 
-  const currentPage = pagination?.index ?? defaultPageIndex;
-  const currentSize = pagination?.size ?? defaultPageSize;
+  const currentPage = pagination?.index || defaultPageIndex;
+  const currentSize = pagination?.size || defaultPageSize;
 
   React.useEffect(() => {
     const prefetchNextPage = async () => {
@@ -61,7 +61,7 @@ export const usePagination = <
       prefetchSearchData.pageNumber = prefetchPage;
       await queryClient.prefetchQuery(
         [queryKeyName, prefetchPage, prefetchSearchData.pageSize],
-        () => () => () => searchPagination(url, prefetchSearchData)
+        () => searchPagination(url, prefetchSearchData)
       );
     };
 
@@ -139,5 +139,6 @@ export const usePagination = <
     currentSize,
     totalPages,
     paginationResponse,
+    isLoading: searchPaginationQuery.isLoading,
   };
 };

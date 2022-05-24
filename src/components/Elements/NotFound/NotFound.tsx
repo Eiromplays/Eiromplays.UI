@@ -5,18 +5,20 @@ import { Link, useNavigate } from '@tanstack/react-location';
 import { Button } from '@/components/Elements';
 
 export type NotFoundProps = {
+  backToSafeGroundUrl?: string;
   loginUrl?: string;
   registerUrl?: string;
 };
 
 export const NotFound = ({
+  backToSafeGroundUrl = '/',
   loginUrl = '/bff/login',
   registerUrl = '/auth/register',
 }: NotFoundProps = {}) => {
   const navigate = useNavigate();
 
   const handleBackToSafeGround = () => {
-    navigate({ to: '/', replace: true });
+    navigate({ to: backToSafeGroundUrl, replace: true });
   };
 
   return (

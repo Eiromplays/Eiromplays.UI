@@ -1,4 +1,5 @@
 import { Dialog, Menu, Transition } from '@headlessui/react';
+import { Link } from '@tanstack/react-location';
 import clsx from 'clsx';
 import * as React from 'react';
 import {
@@ -15,7 +16,7 @@ import { MdOutlineDevicesOther, MdOutlineHistory } from 'react-icons/md';
 import { ThemeToggle } from '@/components/Theme';
 import { useAuth } from '@/lib/auth';
 
-import { Button, Link } from '../Elements';
+import { Button } from '../Elements';
 
 type SideNavigationItem = {
   name: string;

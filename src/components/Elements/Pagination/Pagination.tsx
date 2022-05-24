@@ -5,6 +5,7 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+import { Spinner } from '@/components/Elements';
 import { DefaultLocationGenerics } from '@/providers';
 import { BaseEntry, PaginationFilter } from '@/types';
 
@@ -40,6 +41,7 @@ export const Pagination = <
     currentSize,
     totalPages,
     paginationResponse,
+    isLoading,
   } = usePagination<SearchPaginationDTO, Entry, TGenerics>({
     onPageChanged: onPageChanged,
     onPageSizeChanged: onPageSizeChanged,
@@ -59,6 +61,16 @@ export const Pagination = <
 
     SetPageSize(parseInt(newValue, 10) || defaultPageSize);
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-48 flex justify-center items-center">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (!paginationResponse) return null;
 
   return (
     <div>
