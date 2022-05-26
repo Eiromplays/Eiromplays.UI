@@ -1,7 +1,7 @@
 {
   "name": "eiromplays-ui",
   "private": false,
-  "version": "1.8.9",
+  "version": "1.9.0",
   "scripts": {
     "build": "run-p build:*",
     "build:scripts": "vite build",
