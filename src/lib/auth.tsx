@@ -24,11 +24,11 @@ async function logoutFn() {
   const user = await loadUser();
 
   if (user?.logoutUrl) {
-    window.location.href = user.logoutUrl;
+    window.location.href = user.logoutUrl ?? '/bff/logout';
   }
 }
 
-export const authConfig = {
+export const defaultAuthConfig = {
   loadUser,
   loginFn,
   login2faFn,
@@ -47,7 +47,7 @@ export type InitializeAuthProps<User extends AuthUser = AuthUser> = {
   authConfig: AuthProviderConfig<User | null>;
 };
 
-export const initializeAuth = <
+export const initializeCustomAuth = <
   User extends AuthUser = AuthUser,
   Error = unknown,
   LoginCredentials = unknown,
@@ -56,7 +56,7 @@ export const initializeAuth = <
 >({
   authConfig,
 }: InitializeAuthProps<User>) => {
-  const { AuthProvider: InitializedAuthProvider, useAuth: initializedUseAuth } = initReactQueryAuth<
+  const { AuthProvider, useAuth } = initReactQueryAuth<
     User | null,
     Error,
     LoginCredentials,
@@ -64,11 +64,7 @@ export const initializeAuth = <
     RegisterCredentials
   >(authConfig);
 
-  AuthProvider = InitializedAuthProvider;
-  useAuth = initializedUseAuth;
-  return { AuthProvider: InitializedAuthProvider, useAuth: initializedUseAuth };
+  return { AuthProvider, useAuth };
 };
 
-export let AuthProvider = initializeAuth({ authConfig: authConfig }).AuthProvider;
-
-export let useAuth: any = initializeAuth({ authConfig: authConfig }).useAuth;
+export const { AuthProvider, useAuth } = initReactQueryAuth<AuthUser | null>(defaultAuthConfig);

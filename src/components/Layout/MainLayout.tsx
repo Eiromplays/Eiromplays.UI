@@ -181,7 +181,7 @@ const UserNavigation = ({
             {customButtons}
             <ThemeToggle />
             <Menu.Button
-              className="max-w-xs bg-gray-200 dark:bg-gray-600 p-2 flex items-center text-sm rounded-full 
+              className="max-w-xs bg-gray-200 dark:bg-gray-600 p-2 flex items-center text-sm rounded-full
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               <span className="sr-only">Open user menu</span>
@@ -204,56 +204,58 @@ const UserNavigation = ({
           >
             <Menu.Items
               static
-              className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-lighter-black ring-1 
+              className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-lighter-black ring-1
               ring-black ring-opacity-5 focus:outline-none"
             >
               {navigationItems.map((item) => (
                 <Menu.Item key={item.name}>
-                  {({ active }) =>
-                    item.externalLink ? (
-                      <a
-                        target={item.target}
-                        onClick={item.onClick}
-                        href={item.to}
-                        className={clsx(
-                          active ? 'bg-gray-100 dark:bg-gray-800' : '',
-                          'block px-4 py-2 text-sm text-gray-700 dark:text-white'
-                        )}
-                      >
-                        {item.icon && (
-                          <item.icon
-                            className={clsx(
-                              'text-gray-400 group-hover:text-gray-300',
-                              'mr-4 flex-shrink-0 h-6 w-6'
-                            )}
-                            aria-hidden="true"
-                          />
-                        )}
-                        {item.name}
-                      </a>
-                    ) : (
-                      <Link
-                        target={item.target}
-                        onClick={item.onClick}
-                        to={item.to}
-                        className={clsx(
-                          active ? 'bg-gray-100 dark:bg-gray-800' : '',
-                          'block px-4 py-2 text-sm text-gray-700 dark:text-white'
-                        )}
-                      >
-                        {item.icon && (
-                          <item.icon
-                            className={clsx(
-                              'text-gray-400 group-hover:text-gray-300',
-                              'mr-4 flex-shrink-0 h-6 w-6'
-                            )}
-                            aria-hidden="true"
-                          />
-                        )}
-                        {item.name}
-                      </Link>
-                    )
-                  }
+                  {({ active }) => (
+                    <>
+                      {item.externalLink ? (
+                        <a
+                          target={item.target}
+                          onClick={item.onClick}
+                          href={item.to}
+                          className={clsx(
+                            active ? 'bg-gray-100 dark:bg-gray-800' : '',
+                            'block px-4 py-2 text-sm text-gray-700 dark:text-white'
+                          )}
+                        >
+                          {item.icon && (
+                            <item.icon
+                              className={clsx(
+                                'text-gray-400 group-hover:text-gray-300',
+                                'mr-4 flex-shrink-0 h-6 w-6'
+                              )}
+                              aria-hidden="true"
+                            />
+                          )}
+                          {item.name}
+                        </a>
+                      ) : (
+                        <Link
+                          target={item.target}
+                          onClick={item.onClick}
+                          to={item.to}
+                          className={clsx(
+                            active ? 'bg-gray-100 dark:bg-gray-800' : '',
+                            'block px-4 py-2 text-sm text-gray-700 dark:text-white'
+                          )}
+                        >
+                          {item.icon && (
+                            <item.icon
+                              className={clsx(
+                                'text-gray-400 group-hover:text-gray-300',
+                                'mr-4 flex-shrink-0 h-6 w-6'
+                              )}
+                              aria-hidden="true"
+                            />
+                          )}
+                          {item.name}
+                        </Link>
+                      )}
+                    </>
+                  )}
                 </Menu.Item>
               ))}
             </Menu.Items>
@@ -377,14 +379,14 @@ const Logo = ({ logo }: LogoProps) => {
 
 type MainLayoutProps = LogoProps & {
   children: React.ReactNode;
-  userNavigationItems?: UserNavigationItem[];
-  sideBarNavigationItems?: SideNavigationItem[];
+  userNavigationProps?: UserNavigationProps;
+  sideBarNavigationProps?: SideNavigationProps;
 };
 
 export const MainLayout = ({
   children,
-  userNavigationItems = [],
-  sideBarNavigationItems = [],
+  userNavigationProps,
+  sideBarNavigationProps,
   logo,
 }: MainLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
@@ -395,9 +397,9 @@ export const MainLayout = ({
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
         logo={logo}
-        items={sideBarNavigationItems}
+        items={sideBarNavigationProps?.items}
       />
-      <Sidebar logo={logo} items={sideBarNavigationItems} />
+      <Sidebar logo={logo} {...sideBarNavigationProps} />
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
         <div className="relative z-10 flex-shrink-0 flex h-16 bg-white dark:bg-gray-800 shadow">
           <button
@@ -409,7 +411,7 @@ export const MainLayout = ({
           </button>
           <div className="flex-1 px-4 flex justify-end">
             <div className="ml-4 flex items-center md:ml-6">
-              <UserNavigation items={userNavigationItems} />
+              <UserNavigation {...userNavigationProps} />
             </div>
           </div>
         </div>

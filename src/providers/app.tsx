@@ -52,6 +52,7 @@ type AppProviderProps<TGenerics extends DefaultLocationGenerics = DefaultLocatio
   location?: ReactLocation<TGenerics>;
   createDefaultOutlet?: boolean;
   children?: React.ReactNode;
+  CustomAuthProvider?: React.ComponentType<any>;
 };
 
 export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics>({
@@ -60,6 +61,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
   location = new ReactLocation<TGenerics>(),
   createDefaultOutlet = true,
   children,
+  CustomAuthProvider = AuthProvider,
 }: AppProviderProps<TGenerics>) => {
   return (
     <React.Suspense
@@ -72,7 +74,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-            <AuthProvider>
+            <CustomAuthProvider>
               <Router
                 location={location}
                 routes={routes || (routesFunctions && routesFunctions())}
@@ -106,7 +108,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
                 {createDefaultOutlet && <Outlet />}
                 {children}
               </Router>
-            </AuthProvider>
+            </CustomAuthProvider>
           </QueryClientProvider>
         </HelmetProvider>
       </ErrorBoundary>
