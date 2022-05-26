@@ -70,4 +70,4 @@ export const initializeAuth = <
   return { AuthProvider, useAuth };
 };
 export let AuthProvider: any = initializeAuth({ authConfig: defaultAuthConfig }).AuthProvider,
-  useAuth: any = initReactQueryAuth<AuthUser | null>(defaultAuthConfig).useAuth;
+  useAuth: any = initializeAuth({ authConfig: defaultAuthConfig }).useAuth;

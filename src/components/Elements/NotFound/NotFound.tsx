@@ -1,6 +1,7 @@
 // Not found, original code: https://codepen.io/Navedkhan012/pen/vrWQMY
 
 import { Link, useNavigate } from '@tanstack/react-location';
+import React from 'react';
 
 import { Button } from '@/components/Elements';
 
