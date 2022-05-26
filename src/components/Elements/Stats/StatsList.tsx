@@ -1,4 +1,6 @@
-import { Stats, StatsProps } from '@/components/Stats';
+import React from 'react';
+
+import { Stats, StatsProps } from './Stats';
 
 export type StatsListProps = {
   items: StatsProps[];

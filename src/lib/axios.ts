@@ -48,6 +48,10 @@ axios.interceptors.response.use(
       messages.push(error.response?.data?.error);
     }
 
+    if (error.response?.data?.supportMessage) {
+      messages.push(error.response?.data?.supportMessage);
+    }
+
     if (messages.length <= 0) {
       toast.error(error.response?.data?.message || error.message);
       return Promise.reject(error);

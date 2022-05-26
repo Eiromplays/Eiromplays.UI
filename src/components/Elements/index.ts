@@ -8,3 +8,4 @@ export * from './Spinner';
 export * from './Table';
 export * from './Pagination';
 export * from './NotFound';
+export * from './Stats';

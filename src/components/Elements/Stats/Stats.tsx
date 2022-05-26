@@ -5,11 +5,12 @@ import React from 'react';
 
 export type StatsProps = {
   title: string;
-  value: number | string;
+  value: number | string | React.ReactNode;
   smallIcon?: React.ReactNode;
   largeIcon?: React.ReactNode;
   description?: string;
   percentage?: PercentageProps;
+  children?: React.ReactNode;
 };
 
 export type PercentageProps = {
@@ -25,6 +26,7 @@ export const Stats = ({
   largeIcon,
   description,
   percentage,
+  children,
 }: StatsProps) => {
   const {
     text: percentageText,
@@ -68,6 +70,7 @@ export const Stats = ({
         </div>
         {largeIcon && <div className="w-24 h-24">{largeIcon}</div>}
       </div>
+      {children}
     </div>
   );
 };
