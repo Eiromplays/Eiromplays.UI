@@ -4,11 +4,11 @@ import clsx from 'clsx';
 import React from 'react';
 
 export type StatsProps = {
-  title: string;
+  title: string | React.ReactNode;
   value: number | string | React.ReactNode;
   smallIcon?: React.ReactNode;
   largeIcon?: React.ReactNode;
-  description?: string;
+  description?: string | React.ReactNode;
   percentage?: PercentageProps;
   children?: React.ReactNode;
 };
@@ -50,7 +50,7 @@ export const Stats = ({
         <span className="text-sm font-medium text-gray-500 break-words">{title}</span>
       </div>
       <span className="block text-4xl font-semibold mt-4 break-words">{value}</span>
-      <div className="flex flex-wrap items-center gap-x-20 md:gap-x-28">
+      <div className="flex flex-column items-center">
         <div>
           {(percentageText || percentageSubText) && (
             <div className="flex text-xs mt-3 font-medium">
@@ -68,7 +68,7 @@ export const Stats = ({
             </div>
           )}
         </div>
-        {largeIcon && <div className="w-24 h-24">{largeIcon}</div>}
+        {largeIcon && <div className="w-24 h-24 ml-auto">{largeIcon}</div>}
       </div>
       {children}
     </div>
