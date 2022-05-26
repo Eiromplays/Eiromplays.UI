@@ -28,7 +28,7 @@ async function logoutFn() {
   }
 }
 
-const authConfig = {
+export const authConfig = {
   loadUser,
   loginFn,
   login2faFn,
@@ -56,7 +56,7 @@ export const initializeAuth = <
 >({
   authConfig,
 }: InitializeAuthProps<User>) => {
-  const { AuthProvider, useAuth } = initReactQueryAuth<
+  const { AuthProvider: InitializedAuthProvider, useAuth: initializedUseAuth } = initReactQueryAuth<
     User | null,
     Error,
     LoginCredentials,
@@ -64,7 +64,11 @@ export const initializeAuth = <
     RegisterCredentials
   >(authConfig);
 
-  return { AuthProvider, useAuth };
+  AuthProvider = InitializedAuthProvider;
+  useAuth = initializedUseAuth;
+  return { AuthProvider: InitializedAuthProvider, useAuth: initializedUseAuth };
 };
 
-export const { AuthProvider, useAuth } = initializeAuth({ authConfig: authConfig });
+export let AuthProvider = initializeAuth({ authConfig: authConfig }).AuthProvider;
+
+export let useAuth: any = initializeAuth({ authConfig: authConfig }).useAuth;
