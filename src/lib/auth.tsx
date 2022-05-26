@@ -47,7 +47,7 @@ export type InitializeAuthProps<User extends AuthUser = AuthUser> = {
   authConfig: AuthProviderConfig<User | null>;
 };
 
-export const initializeCustomAuth = <
+export const initializeAuth = <
   User extends AuthUser = AuthUser,
   Error = unknown,
   LoginCredentials = unknown,
@@ -56,7 +56,7 @@ export const initializeCustomAuth = <
 >({
   authConfig,
 }: InitializeAuthProps<User>) => {
-  const { AuthProvider, useAuth } = initReactQueryAuth<
+  const { AuthProvider: NewAuthProvider, useAuth: newUseAuth } = initReactQueryAuth<
     User | null,
     Error,
     LoginCredentials,
@@ -64,7 +64,10 @@ export const initializeCustomAuth = <
     RegisterCredentials
   >(authConfig);
 
+  AuthProvider = NewAuthProvider;
+  useAuth = newUseAuth;
+
   return { AuthProvider, useAuth };
 };
-
-export const { AuthProvider, useAuth } = initReactQueryAuth<AuthUser | null>(defaultAuthConfig);
+export let AuthProvider: any = initializeAuth({ authConfig: defaultAuthConfig }).AuthProvider,
+  useAuth: any = initReactQueryAuth<AuthUser | null>(defaultAuthConfig).useAuth;
