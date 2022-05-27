@@ -1,11 +1,8 @@
-import { ContentLayout } from 'eiromplays-ui';
 import React from 'react';
 import {
   CartesianGrid,
-  Legend,
-  LegendProps,
   Line,
-  LineChart,
+  LineChart as RechartsLineChart,
   LineProps,
   ResponsiveContainer,
   ResponsiveContainerProps,
@@ -17,7 +14,7 @@ import {
   YAxisProps,
 } from 'recharts';
 
-export type LineChart2Props = {
+export type LineChartProps = {
   data: any[];
   title?: string | React.ReactNode;
   subTitle?: string | React.ReactNode;
@@ -29,7 +26,7 @@ export type LineChart2Props = {
   children?: React.ReactNode;
 };
 
-export const LineChart2 = ({
+export const LineChart = ({
   data,
   title,
   subTitle,
@@ -39,7 +36,7 @@ export const LineChart2 = ({
   yAxisProps,
   tooltipProps,
   children,
-}: LineChart2Props) => {
+}: LineChartProps) => {
   return (
     <div className="flex flex-wrap justify-center text-center">
       <div>
@@ -47,7 +44,7 @@ export const LineChart2 = ({
         <p className="text-sm">{subTitle}</p>
       </div>
       <ResponsiveContainer {...responseContainerProps}>
-        <LineChart data={data}>
+        <RechartsLineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis {...xAxisProps} />
           <YAxis {...yAxisProps} />
@@ -56,7 +53,7 @@ export const LineChart2 = ({
             <Line key={index} type="monotone" dataKey={line.dataKey} stroke={line.stroke} />
           ))}
           {children}
-        </LineChart>
+        </RechartsLineChart>
       </ResponsiveContainer>
     </div>
   );
