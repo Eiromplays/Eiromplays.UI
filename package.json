@@ -1,7 +1,7 @@
 {
   "name": "eiromplays-ui",
   "private": false,
-  "version": "2.1.0",
+  "version": "2.1.1",
   "scripts": {
     "build": "run-p build:*",
     "build:scripts": "vite build",
@@ -15,9 +15,11 @@
     "validate": "npm-run-all --parallel check-types && lint-staged"
   },
   "dependencies": {
+    "@import-meta-env/unplugin": "^0.1.8",
     "@tanstack/react-location": "^3.7.4",
     "@tanstack/react-location-devtools": "^3.4.4",
     "@tanstack/react-location-elements-to-routes": "^3.4.4",
+    "dotenv": "^16.0.1",
     "react": "^18.1.0",
     "react-countup": "^6.2.0",
     "react-error-boundary": "^3.1.4",
@@ -43,6 +45,7 @@
   "devDependencies": {
     "@headlessui/react": "^1.6.0",
     "@hookform/resolvers": "^2.8.8",
+    "@import-meta-env/cli": "^0.1.7",
     "@tailwindcss/typography": "^0.5.2",
     "@tailwindcss/ui": "^0.7.2",
     "@types/dompurify": "^2.3.3",
