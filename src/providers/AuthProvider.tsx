@@ -20,7 +20,10 @@ import { AuthUser } from '@/features/auth';
 // eslint-disable-next-line no-restricted-imports
 import { NotLoggedIn } from '@/features/auth/components/NotLoggedIn';
 
-export interface AuthProviderConfig<User = unknown, Error = unknown> {
+export interface AuthProviderConfig<
+  User extends AuthUser | null | undefined = AuthUser,
+  Error = unknown
+> {
   key?: string;
   loadUser: (data: any) => Promise<User>;
   loginFn: (data: any) => Promise<User>;
@@ -35,7 +38,7 @@ export interface AuthProviderConfig<User = unknown, Error = unknown> {
 }
 
 export interface AuthContextValue<
-  User = unknown,
+  User extends AuthUser | null | undefined = AuthUser,
   Error = unknown,
   LoginCredentials = unknown,
   Login2faCredentials = unknown,
@@ -59,7 +62,7 @@ export interface AuthProviderProps {
 }
 
 export function initReactQueryAuth<
-  User = unknown,
+  User extends AuthUser | null | undefined = AuthUser,
   Error = unknown,
   LoginCredentials = unknown,
   Login2faCredentials = unknown,
@@ -141,7 +144,7 @@ export function initReactQueryAuth<
       },
     });
 
-    const isLoggedIn = !!(user as unknown as AuthUser)?.id;
+    const isLoggedIn = !!(user as unknown as User)?.id;
 
     const value = React.useMemo(
       () => ({

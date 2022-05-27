@@ -2,14 +2,12 @@ import { resolve } from 'path';
 
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
-import envCompatible from 'vite-plugin-env-compatible';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { peerDependencies, dependencies } from './package.json';
-
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react({ jsxRuntime: 'classic' }), envCompatible(), tsconfigPaths()],
+  plugins: [react({ jsxRuntime: 'classic' }), tsconfigPaths()],
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

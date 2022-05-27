@@ -2,10 +2,12 @@
 
 import clsx from 'clsx';
 import React from 'react';
+import CountUp, { CountUpProps } from 'react-countup';
 
 export type StatsProps = {
   title: string | React.ReactNode;
   value: number | string | React.ReactNode;
+  countUpProps?: CountUpProps;
   smallIcon?: React.ReactNode;
   largeIcon?: React.ReactNode;
   description?: string | React.ReactNode;
@@ -22,6 +24,7 @@ export type PercentageProps = {
 export const Stats = ({
   title,
   value,
+  countUpProps,
   smallIcon,
   largeIcon,
   description,
@@ -49,7 +52,9 @@ export const Stats = ({
         )}
         <span className="text-sm font-medium text-gray-500 break-words">{title}</span>
       </div>
-      <span className="block text-4xl font-semibold mt-4 break-words">{value}</span>
+      <span className="block text-4xl font-semibold mt-4 break-words">
+        {countUpProps ? <CountUp {...countUpProps} /> : value}
+      </span>
       <div className="flex flex-column items-center">
         <div>
           {(percentageText || percentageSubText) && (

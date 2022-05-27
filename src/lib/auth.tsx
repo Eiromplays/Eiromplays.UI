@@ -1,30 +1,35 @@
 import React from 'react';
 
 import { Spinner } from '@/components/Elements/Spinner';
-import { AuthUser, getUser } from '@/features/auth';
-import { AuthProviderConfig, initReactQueryAuth } from '@/providers/AuthProvider';
+import { AuthUser, getUser, GetUserProps } from '@/features/auth';
+import {
+  AuthContextValue,
+  AuthProviderConfig,
+  AuthProviderProps,
+  initReactQueryAuth,
+} from '@/providers/AuthProvider';
 
-async function loadUser() {
-  return await getUser();
+async function loadUser<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+  return await getUser<User>(props);
 }
 
-async function loginFn() {
-  return await loadUser();
+async function loginFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+  return await loadUser<User>(props);
 }
 
-async function login2faFn() {
-  return await loadUser();
+async function login2faFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+  return await loadUser<User>(props);
 }
 
-async function registerFn() {
-  return await loadUser();
+async function registerFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+  return await loadUser<User>(props);
 }
 
-async function logoutFn() {
-  const user = await loadUser();
+async function logoutFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+  const user = await loadUser<User>(props);
 
   if (user?.logoutUrl) {
-    window.location.href = user.logoutUrl ?? '/bff/logout';
+    window.location.href = user.logoutUrl;
   }
 }
 
@@ -43,19 +48,19 @@ export const defaultAuthConfig = {
   },
 };
 
-export type InitializeAuthProps<User extends AuthUser = AuthUser> = {
-  authConfig: AuthProviderConfig<User | null>;
+export type InitializeAuthProps<User extends AuthUser | null = AuthUser, Error = unknown> = {
+  authConfig: AuthProviderConfig<User | null, Error>;
 };
 
 export const initializeAuth = <
-  User extends AuthUser = AuthUser,
+  User extends AuthUser | null = AuthUser,
   Error = unknown,
   LoginCredentials = unknown,
   Login2faCredentials = unknown,
   RegisterCredentials = unknown
 >({
   authConfig,
-}: InitializeAuthProps<User>) => {
+}: InitializeAuthProps<User, Error>) => {
   const { AuthProvider: NewAuthProvider, useAuth: newUseAuth } = initReactQueryAuth<
     User | null,
     Error,
@@ -69,5 +74,9 @@ export const initializeAuth = <
 
   return { AuthProvider, useAuth };
 };
-export let AuthProvider: any = initializeAuth({ authConfig: defaultAuthConfig }).AuthProvider,
-  useAuth: any = initializeAuth({ authConfig: defaultAuthConfig }).useAuth;
+export let AuthProvider: ({ children }: AuthProviderProps) => JSX.Element = initializeAuth({
+    authConfig: defaultAuthConfig,
+  }).AuthProvider,
+  useAuth: () => AuthContextValue<any | null, any, any, any, any> = initializeAuth({
+    authConfig: defaultAuthConfig,
+  }).useAuth;

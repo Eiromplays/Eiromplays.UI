@@ -6,10 +6,12 @@ import { AuthUser } from '../types';
 
 export type GetUserProps = {
   customClaims?: Claim[];
+  silentLoginProps?: SilentLoginProps;
 };
 
-export const getUser = async <User extends AuthUser = AuthUser>({
+export const getUser = async <User extends AuthUser | null | undefined = AuthUser>({
   customClaims = [],
+  silentLoginProps,
 }: GetUserProps = {}): Promise<User | null> => {
   const userDiagnosis = await axios.get('/bff/diagnostics');
   if (userDiagnosis) console.log(userDiagnosis);
@@ -17,7 +19,7 @@ export const getUser = async <User extends AuthUser = AuthUser>({
   const userSessionInfo = (await axios.get('/bff/user')) as Claim[];
 
   if (!userSessionInfo) {
-    silentLogin();
+    silentLogin(silentLoginProps);
   }
 
   const nameDictionary =
@@ -60,22 +62,16 @@ export const getUser = async <User extends AuthUser = AuthUser>({
   return null;
 };
 
-export const silentLogin = () => {
-  const useSilentLogin =
-    process.env.REACT_APP_USE_SILENT_LOGIN ||
-    process.env.VUE_APP_USE_SILENT_LOGIN ||
-    import.meta.env.VITE_USE_SILENT_LOGIN;
+export type SilentLoginProps = {
+  useSilentLogin?: boolean;
+  redirectIfSilentLoginFailed?: boolean;
+};
 
-  console.log('useSilentLogin', useSilentLogin);
-
-  const redirectToLoginIfSilentLoginFailed =
-    process.env.REACT_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
-    process.env.VUE_APP_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED ||
-    import.meta.env.VITE_REDIRECT_TO_LOGIN_IF_SILENT_LOGIN_FAILED;
-
-  console.log('redirectToLoginIfSilentLoginFailed', redirectToLoginIfSilentLoginFailed);
-
-  if (useSilentLogin?.toLowerCase() === 'false') return;
+export const silentLogin = ({
+  useSilentLogin,
+  redirectIfSilentLoginFailed,
+}: SilentLoginProps = {}) => {
+  if (!useSilentLogin) return;
 
   const bffSilentLoginIframe = document.createElement('iframe');
   document.body.append(bffSilentLoginIframe);
@@ -89,9 +85,7 @@ export const silentLogin = () => {
     } else if (e.data && e.data.source === 'bff-silent-login' && !e.data.isLoggedIn) {
       // we now have a user logged in silently, so reload this window
 
-      // TODO: Find a better solution for useSilentLogin
-      if (redirectToLoginIfSilentLoginFailed?.toLowerCase() === 'true')
-        window.location.href = '/bff/login';
+      if (redirectIfSilentLoginFailed) window.location.href = '/bff/login';
     }
   });
 };
