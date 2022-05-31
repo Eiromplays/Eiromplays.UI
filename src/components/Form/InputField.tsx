@@ -5,7 +5,19 @@ import { UseFormRegisterReturn } from 'react-hook-form';
 import { FieldWrapper, FieldWrapperPassThroughProps } from './FieldWrapper';
 
 type InputFieldProps = FieldWrapperPassThroughProps & {
-  type?: 'text' | 'email' | 'password' | 'file' | 'checkbox' | 'hidden';
+  type?:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'file'
+    | 'checkbox'
+    | 'hidden'
+    | 'tel'
+    | 'number'
+    | 'radio'
+    | 'range'
+    | 'search'
+    | 'url';
   autoComplete?: string; // You can view the different autocomplete values here: https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete#values
   className?: string;
   multiple?: boolean;
@@ -13,6 +25,7 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
   value?: string | number | readonly string[] | undefined;
   placeholder?: string;
   disabled?: boolean;
+  pattern?: string;
   registration: Partial<UseFormRegisterReturn>;
 };
 
@@ -29,6 +42,7 @@ export const InputField = (props: InputFieldProps) => {
     value,
     placeholder,
     disabled = false,
+    pattern,
     registration,
     error,
   } = props;
@@ -43,6 +57,7 @@ export const InputField = (props: InputFieldProps) => {
           accept={accept}
           value={value}
           placeholder={placeholder}
+          pattern={pattern}
           className={
             type !== 'checkbox'
               ? clsx(
