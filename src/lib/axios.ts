@@ -2,6 +2,7 @@ import Axios from 'axios';
 import { toast } from 'react-toastify';
 
 import { WhitelistAxiosError } from '@/types';
+import { createUrl } from '@/utils/createUrl';
 
 export const Whitelists: WhitelistAxiosError[] = [
   { status: 401, urls: ['/bff/user'], ignoreAll: false },
@@ -32,7 +33,7 @@ axios.interceptors.response.use(
         whitelist.urls?.some(
           (url) =>
             url.toLowerCase() ===
-            new URL(error?.request?.responseURL).pathname.replace(/\/$/, '').toLowerCase()
+            createUrl(error?.request?.responseURL)?.pathname.replace(/\/$/, '').toLowerCase()
         ) || whitelist.ignoreAll
     );
 
@@ -65,7 +66,9 @@ axios.interceptors.response.use(
 axios.interceptors.request.use(
   (request) => {
     const shouldIgnore = AddDataToRequestIgnoreUrls.some(
-      (url) => request.url && url.toLowerCase() === request.url.replace(/\/$/, '').toLowerCase()
+      (url) =>
+        request.url &&
+        url.toLowerCase() === createUrl(request.url)?.pathname.replace(/\/$/, '').toLowerCase()
     );
     if (shouldIgnore) return request;
 

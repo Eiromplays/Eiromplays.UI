@@ -1,6 +1,6 @@
 // Not found, original code: https://codepen.io/Navedkhan012/pen/vrWQMY
 
-import { Link, useNavigate } from '@tanstack/react-location';
+import { useNavigate } from '@tanstack/react-location';
 import React from 'react';
 
 import { Button } from '@/components/Elements';
@@ -20,6 +20,14 @@ export const NotFound = ({
 
   const handleBackToSafeGround = () => {
     navigate({ to: backToSafeGroundUrl, replace: true });
+  };
+
+  const redirectToLogin = () => {
+    navigate({ to: loginUrl, replace: true });
+  };
+
+  const redirectToRegister = () => {
+    navigate({ to: registerUrl, replace: true });
   };
 
   return (
@@ -64,15 +72,21 @@ export const NotFound = ({
           <div className="mt-2 flex items-center justify-center gap-5 text-xs">
             <div>
               <p>Don&apos;t have an account?</p>
-              <Link to={registerUrl} className="font-medium text-blue-600 hover:text-blue-500">
+              <Button
+                onClick={redirectToRegister}
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Register
-              </Link>
+              </Button>
             </div>
             <div>
               <p>Already have an account?</p>
-              <Link to={loginUrl} className="font-medium text-blue-600 hover:text-blue-500">
+              <Button
+                onClick={redirectToLogin}
+                className="font-medium text-blue-600 hover:text-blue-500"
+              >
                 Login
-              </Link>
+              </Button>
             </div>
           </div>
         </div>

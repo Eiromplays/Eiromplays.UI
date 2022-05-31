@@ -122,17 +122,19 @@ type UserNavigationProps = {
   addProfileItem?: boolean;
   addSignOutItem?: boolean;
   customButtons?: React.ReactNode;
+  identityServerUiUrl?: string;
 };
 
 const UserNavigation = ({
   items = [],
   addProfileItem = true,
   addSignOutItem = true,
+  identityServerUiUrl = 'https://localhost:3000/',
   customButtons = (
     <Button
       className="max-w-xs bg-gray-200 dark:bg-gray-600 p-2 flex items-center text-sm rounded-full
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      onClick={() => (window.location.href = 'https://localhost:3000')}
+      onClick={() => (window.location.href = identityServerUiUrl)}
     >
       IdentityServer
     </Button>
@@ -143,7 +145,7 @@ const UserNavigation = ({
   if (addProfileItem) {
     const yourProfileItem: UserNavigationItem = {
       name: 'Your Profile',
-      to: 'https://localhost:3000/app/profile',
+      to: `${identityServerUiUrl}/app/profile`,
       externalLink: true,
     };
     if (

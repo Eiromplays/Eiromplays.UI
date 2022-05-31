@@ -34,15 +34,23 @@ export type SearchPagination = {
 
 export type DefaultLocationGenerics = MakeGenerics<{
   Params: {
-    invoiceId: string;
     userId: string;
     logId: string;
     roleId: string;
     key: string;
     Id: string;
+    rememberMe: string;
+    returnUrl: string;
+    clientId: string;
+    email: string;
+    userName: string;
+    loginProvider: string;
   };
   Search: {
     pagination: SearchPagination;
+    returnUrl: string;
+    errorId: string;
+    logoutId: string;
   };
 }>;
 
