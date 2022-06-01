@@ -1,6 +1,6 @@
 // Not found, original code: https://codepen.io/Navedkhan012/pen/vrWQMY
 
-import { useNavigate } from '@tanstack/react-location';
+import { Link, useNavigate } from '@tanstack/react-location';
 import React from 'react';
 
 import { Button } from '@/components/Elements';
@@ -9,25 +9,21 @@ export type NotFoundProps = {
   backToSafeGroundUrl?: string;
   loginUrl?: string;
   registerUrl?: string;
+  loginFn?: (args?: any) => void;
+  registerFn?: (args?: any) => void;
 };
 
 export const NotFound = ({
   backToSafeGroundUrl = '/',
-  loginUrl = '/bff/login',
+  loginUrl = '/auth/login',
   registerUrl = '/auth/register',
+  loginFn,
+  registerFn,
 }: NotFoundProps = {}) => {
   const navigate = useNavigate();
 
   const handleBackToSafeGround = () => {
     navigate({ to: backToSafeGroundUrl, replace: true });
-  };
-
-  const redirectToLogin = () => {
-    navigate({ to: loginUrl, replace: true });
-  };
-
-  const redirectToRegister = () => {
-    navigate({ to: registerUrl, replace: true });
   };
 
   return (
@@ -72,21 +68,23 @@ export const NotFound = ({
           <div className="mt-2 flex items-center justify-center gap-5 text-xs">
             <div>
               <p>Don&apos;t have an account?</p>
-              <Button
-                onClick={redirectToRegister}
+              <Link
+                to={registerUrl}
+                onClick={registerFn}
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Register
-              </Button>
+              </Link>
             </div>
             <div>
               <p>Already have an account?</p>
-              <Button
-                onClick={redirectToLogin}
+              <Link
+                to={loginUrl}
+                onClick={loginFn}
                 className="font-medium text-blue-600 hover:text-blue-500"
               >
                 Login
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
