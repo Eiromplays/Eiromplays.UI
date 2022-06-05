@@ -6,9 +6,10 @@ import { Layout } from './Layout';
 
 type NotAllowedProps = {
   logo?: string | undefined;
+  url?: string;
 };
 
-export const NotAllowed = ({ logo }: NotAllowedProps) => {
+export const NotAllowed = ({ logo, url = '/app' }: NotAllowedProps) => {
   const { user } = useAuth();
 
   return (
@@ -18,7 +19,7 @@ export const NotAllowed = ({ logo }: NotAllowedProps) => {
         <br />
         <p className="dark:text-gray-50">
           Click{' '}
-          <a className="underline" href="/app">
+          <a className="underline" href={url}>
             here
           </a>{' '}
           to go back.

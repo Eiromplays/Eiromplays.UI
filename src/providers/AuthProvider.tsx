@@ -144,7 +144,7 @@ export function initReactQueryAuth<
       },
     });
 
-    const isLoggedIn = !!(user as unknown as User)?.id;
+    const isLoggedIn = !user?.id;
 
     const value = React.useMemo(
       () => ({

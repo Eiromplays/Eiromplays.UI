@@ -74,6 +74,19 @@ export const initializeAuth = <
 
   return { AuthProvider, useAuth };
 };
+
+export type UseAuthType<
+  User extends AuthUser | null = AuthUser,
+  Error = unknown,
+  LoginCredentials = unknown,
+  Login2faCredentials = unknown,
+  RegisterCredentials = unknown
+> = (
+  ...args: any
+) => Promise<
+  AuthContextValue<User, Error, LoginCredentials, Login2faCredentials, RegisterCredentials>
+>;
+
 export let AuthProvider: ({ children }: AuthProviderProps) => JSX.Element = initializeAuth({
     authConfig: defaultAuthConfig,
   }).AuthProvider,
