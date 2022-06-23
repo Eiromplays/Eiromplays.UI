@@ -9,23 +9,33 @@ import {
   initReactQueryAuth,
 } from '@/providers/AuthProvider';
 
-async function loadUser<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+async function loadUser<User extends AuthUser | null | undefined = AuthUser>(
+  props: GetUserProps = {}
+) {
   return await getUser<User>(props);
 }
 
-async function loginFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+async function loginFn<User extends AuthUser | null | undefined = AuthUser>(
+  props: GetUserProps = {}
+) {
   return await loadUser<User>(props);
 }
 
-async function login2faFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+async function login2faFn<User extends AuthUser | null | undefined = AuthUser>(
+  props: GetUserProps = {}
+) {
   return await loadUser<User>(props);
 }
 
-async function registerFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+async function registerFn<User extends AuthUser | null | undefined = AuthUser>(
+  props: GetUserProps = {}
+) {
   return await loadUser<User>(props);
 }
 
-async function logoutFn<User extends AuthUser | null = AuthUser>(props: GetUserProps = {}) {
+async function logoutFn<User extends AuthUser | null | undefined = AuthUser>(
+  props: GetUserProps = {}
+) {
   const user = await loadUser<User>(props);
 
   if (user?.logoutUrl) {

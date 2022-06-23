@@ -1,12 +1,13 @@
-import { useAuth } from 'eiromplays-ui';
 import * as React from 'react';
+
+import { useAuth } from '@/lib/auth';
 
 export enum ROLES {
   ADMINISTRATOR = 'ADMINISTRATOR',
   USER = 'USER',
 }
 
-type RoleTypes = keyof typeof ROLES;
+export type RoleTypes = keyof typeof ROLES;
 
 export const POLICIES = {};
 
@@ -16,7 +17,7 @@ export const useAuthorization = () => {
   const checkAccess = React.useCallback(
     ({ allowedRoles }: { allowedRoles: RoleTypes[] }) => {
       if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles?.every((role) => user?.roles.includes(role.toLowerCase()));
+        return allowedRoles?.every((role) => user?.roles?.includes(role.toLowerCase()));
       }
 
       return true;
@@ -27,7 +28,7 @@ export const useAuthorization = () => {
   return { checkAccess, role: user?.roles };
 };
 
-type AuthorizationProps = {
+export type AuthorizationProps = {
   forbiddenFallback?: React.ReactNode;
   children: React.ReactNode;
 } & (

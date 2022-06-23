@@ -5,15 +5,24 @@ import { formatDate } from '@/utils/format';
 import { AuthUser } from '../types';
 
 export type GetUserProps = {
+  authenticatedProps?: AuthenticatedProps;
   customClaims?: Claim[];
   silentLoginProps?: SilentLoginProps;
 };
 
-export const getUser = async <User extends AuthUser | null = AuthUser>({
+export const getUser = async <User extends AuthUser | null | undefined = AuthUser>({
+  authenticatedProps,
   customClaims = [],
   silentLoginProps,
 }: GetUserProps = {}): Promise<User | null> => {
+  if (authenticatedProps?.useAuthenticated && authenticatedProps.isAuthenticatedUrl) {
+    const isAuthenticated = await axios.get(authenticatedProps.isAuthenticatedUrl);
+    if (!isAuthenticated?.data) {
+      return null;
+    }
+  }
   const userDiagnosis = await axios.get('/bff/diagnostics');
+
   if (userDiagnosis) console.log(userDiagnosis);
 
   const userSessionInfo: Claim[] = await axios.get('/bff/user');
@@ -61,6 +70,11 @@ export const getUser = async <User extends AuthUser | null = AuthUser>({
   if (currentUser?.id) return currentUser as User;
 
   return null;
+};
+
+export type AuthenticatedProps = {
+  useAuthenticated?: boolean;
+  isAuthenticatedUrl?: string;
 };
 
 export type SilentLoginProps = {

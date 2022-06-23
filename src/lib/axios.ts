@@ -9,15 +9,13 @@ export const AxiosWhitelistedErrors: WhitelistAxiosError[] = [
   { status: 400, urls: ['/spa/login'] },
 ];
 
-export const AxiosAddDataToRequestIgnoreUrls: string[] = [];
-
 export const axios = Axios.create({
   headers: {
     'X-CSRF': '1',
   },
 });
 
-export const UseAxiosInterceptors = { response: true, request: true };
+export const UseAxiosInterceptors = { response: true };
 axios.defaults.timeout = 30_000; // If you want to increase this, do it for a specific call, not the global app API.
 
 if (UseAxiosInterceptors.response) {
@@ -61,26 +59,6 @@ if (UseAxiosInterceptors.response) {
       }
       messages.forEach((message: string) => toast.error(message));
 
-      return Promise.reject(error);
-    }
-  );
-}
-
-if (UseAxiosInterceptors.request) {
-  axios.interceptors.request.use(
-    (request) => {
-      const shouldIgnore = AxiosAddDataToRequestIgnoreUrls.some(
-        (url) =>
-          request.url &&
-          url.toLowerCase() === createUrl(request.url)?.pathname.replace(/\/$/, '').toLowerCase()
-      );
-      if (shouldIgnore) return request;
-
-      if (request?.data) request.data = { Data: request.data };
-
-      return request;
-    },
-    (error) => {
       return Promise.reject(error);
     }
   );

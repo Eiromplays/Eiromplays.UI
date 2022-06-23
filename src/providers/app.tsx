@@ -7,11 +7,10 @@ import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { ToastContainer } from 'react-toastify';
 
-// eslint-disable-next-line import/order
 import { Button, Spinner } from '@/components/Elements';
+import { AuthProvider, queryClient } from '@/lib';
 
 import 'react-toastify/dist/ReactToastify.css';
-import { AuthProvider, queryClient } from '@/lib';
 
 const ErrorFallback = () => {
   return (
