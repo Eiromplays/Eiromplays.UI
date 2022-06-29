@@ -11,6 +11,7 @@ import { Button, Spinner } from '@/components/Elements';
 import { AuthProvider, queryClient } from '@/lib';
 
 import 'react-toastify/dist/ReactToastify.css';
+import { SearchFilter } from '@/types';
 
 const ErrorFallback = () => {
   return (
@@ -50,6 +51,7 @@ export type DefaultLocationGenerics = MakeGenerics<{
     returnUrl: string;
     errorId: string;
     logoutId: string;
+    searchFilter: SearchFilter;
   };
 }>;
 

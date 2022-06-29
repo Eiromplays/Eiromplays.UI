@@ -47,5 +47,30 @@ export type PaginationResponse<TItem extends BaseEntry | any> = {
   hasNextPage: boolean;
 };
 
+export type CustomSearchFilter = {
+  name: string;
+  value: any;
+  formType:
+    | 'text'
+    | 'email'
+    | 'password'
+    | 'file'
+    | 'checkbox'
+    | 'hidden'
+    | 'tel'
+    | 'number'
+    | 'radio'
+    | 'range'
+    | 'search'
+    | 'url';
+};
+
+export type SearchFilter = {
+  customFilters: CustomSearchFilter[];
+  orderBy: string[];
+  advancedSearch: Search;
+  keyword: string;
+};
+
 export type Updater<T> = T | ((old: T) => T);
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void;
