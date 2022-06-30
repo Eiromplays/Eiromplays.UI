@@ -2,7 +2,7 @@ import { useNavigate, useSearch } from '@tanstack/react-location';
 import React from 'react';
 
 import { DefaultLocationGenerics } from '@/providers';
-import { CustomSearchFilter, SearchFilter } from '@/types';
+import { CustomSearchProperty, SearchFilter } from '@/types';
 
 export type UseSearchPaginationFilters = {
   filter: SearchFilter;
@@ -60,14 +60,14 @@ export const useSearchPaginationFilters = <
   );
 
   const UpdateCustomFilter = React.useCallback(
-    (customFilter: CustomSearchFilter) => {
+    (customFilter: CustomSearchProperty) => {
       navigate({
         search: (old: any) => {
           return {
             ...old,
             searchFilter: {
               ...old?.filter,
-              customFilters: old?.filter?.customFilters.map((cf: CustomSearchFilter) =>
+              customProperties: old?.filter?.customProperties.map((cf: CustomSearchProperty) =>
                 cf.name === customFilter.name ? customFilter : cf
               ),
             },

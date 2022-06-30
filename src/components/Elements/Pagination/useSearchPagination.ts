@@ -45,13 +45,13 @@ export const useSearchPagination = <
   searchData.orderBy = searchFilter?.orderBy;
   searchData.keyword = searchFilter?.keyword;
 
-  try {
-    searchFilter?.customFilters?.forEach((filter) => {
-      (searchData as any)[filter.name] = filter.value;
-    });
-  } catch (_) {
-    console.error(_);
-  }
+  searchFilter?.customProperties?.forEach((property) => {
+    try {
+      (searchData as any)[property.name] = property.value;
+    } catch (_) {
+      // ignore :)
+    }
+  });
 
   return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>({
     ...config,

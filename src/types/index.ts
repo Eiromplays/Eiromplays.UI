@@ -47,10 +47,10 @@ export type PaginationResponse<TItem extends BaseEntry | any> = {
   hasNextPage: boolean;
 };
 
-export type CustomSearchFilter = {
+export type CustomSearchProperty = {
   name: string;
   value: any;
-  formType:
+  type?:
     | 'text'
     | 'email'
     | 'password'
@@ -66,7 +66,7 @@ export type CustomSearchFilter = {
 };
 
 export type SearchFilter = {
-  customFilters: CustomSearchFilter[];
+  customProperties: CustomSearchProperty[];
   orderBy: string[];
   advancedSearch: Search;
   keyword: string;

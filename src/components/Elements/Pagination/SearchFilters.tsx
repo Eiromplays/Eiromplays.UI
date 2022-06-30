@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { Button } from '@/components/Elements';
 import { Form, InputField } from '@/components/Form';
 import { DefaultLocationGenerics } from '@/providers';
 
@@ -26,28 +25,23 @@ export const SearchFilter = <TGenerics extends DefaultLocationGenerics = Default
 
   return (
     <div>
-      <Form
-        onSubmit={async (values) => {
-          console.log(values);
-          /*for (const value of values) {
-            //UpdateCustomFilter(value);
-          }*/
-        }}
-      >
+      <Form onSubmit={async () => {}}>
         {({ register }) =>
-          filter.customFilters?.map((customFilter, index) => (
+          filter.customProperties?.map((customFilter, index) => (
             <InputField
               key={index}
-              type={customFilter.formType}
+              type={customFilter.type}
               label={customFilter.name}
               //error={formState.errors['username']}
-              registration={register(customFilter.name)}
+              registration={register(customFilter.name, {
+                onChange: (value) => {
+                  customFilter.value = value?.target?.checked;
+                  UpdateCustomFilter(customFilter);
+                },
+              })}
             />
           ))
         }
-        <Button form="update-user" type="submit" className="mt-2" variant="warning" size="sm">
-          Update User
-        </Button>
       </Form>
     </div>
   );
