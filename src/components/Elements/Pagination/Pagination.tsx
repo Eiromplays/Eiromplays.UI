@@ -6,6 +6,7 @@ import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { Spinner } from '@/components/Elements';
+import { SearchFilter, SearchFilterProps } from '@/components/Elements/Pagination/SearchFilter';
 import { DefaultLocationGenerics } from '@/providers';
 import { BaseEntry, PaginationFilter } from '@/types';
 

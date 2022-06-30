@@ -3,15 +3,17 @@ import { useQuery } from 'react-query';
 
 import { axios, ExtractFnReturnType, QueryConfig } from '@/lib';
 import { DefaultLocationGenerics } from '@/providers';
-import { BaseEntry, PaginationFilter, PaginationResponse } from '@/types';
+import { BaseEntry, PaginationFilter, PaginationResponse, SearchFilter } from '@/types';
 
 export const searchPagination = <
   SearchPaginationDTO extends PaginationFilter,
   Entry extends BaseEntry | any
 >(
   url: string,
-  data: SearchPaginationDTO
+  data: SearchPaginationDTO,
+  searchFilter?: SearchFilter
 ): Promise<PaginationResponse<Entry>> => {
+  data = setSearchFilter<SearchPaginationDTO>(data, searchFilter);
   return axios.post(url, data);
 };
 
@@ -41,21 +43,37 @@ export const useSearchPagination = <
 }: UseSearchPaginationProps<SearchPaginationDTO, Entry>) => {
   const { searchFilter } = useSearch<TGenerics>();
 
+  return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>({
+    ...config,
+    queryKey: [queryKeyName, searchData.pageNumber, searchData.pageSize],
+    queryFn: () => searchPagination<SearchPaginationDTO, Entry>(url, searchData, searchFilter),
+  });
+};
+
+export const setSearchFilter = <SearchPaginationDTO extends PaginationFilter>(
+  searchData: SearchPaginationDTO,
+  searchFilter?: SearchFilter
+) => {
   searchData.advancedSearch = searchFilter?.advancedSearch;
   searchData.orderBy = searchFilter?.orderBy;
   searchData.keyword = searchFilter?.keyword;
 
+  return searchData;
+
+  /* TODO: Revert changes when custom properties are supported
+  console.log(searchFilter?.customProperties);
+
   searchFilter?.customProperties?.forEach((property) => {
+    console.log(property);
+    if (!property || !property.name || !property.value) return;
+
     try {
+      console.log(searchData, property.name, property.value);
       (searchData as any)[property.name] = property.value;
     } catch (_) {
       // ignore :)
     }
   });
 
-  return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>({
-    ...config,
-    queryKey: [queryKeyName, searchData.pageNumber, searchData.pageSize],
-    queryFn: () => searchPagination<SearchPaginationDTO, Entry>(url, searchData),
-  });
+  return searchData;*/
 };

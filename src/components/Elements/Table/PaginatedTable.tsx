@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useSearchPagination } from '@/components/Elements';
+import { SearchFilter, SearchFilterProps } from '@/components/Elements/Pagination/SearchFilter';
 import { DefaultLocationGenerics } from '@/providers';
 import { BaseEntry, PaginationFilter } from '@/types';
 
@@ -12,9 +13,10 @@ import { Table, TableColumn } from './Table';
 export type PaginatedTableProps<
   SearchPaginationDTO extends PaginationFilter,
   Entry extends BaseEntry | any
-> = PaginationProps<SearchPaginationDTO, Entry> & {
-  columns: TableColumn<Entry>[];
-};
+> = PaginationProps<SearchPaginationDTO, Entry> &
+  SearchFilterProps & {
+    columns: TableColumn<Entry>[];
+  };
 
 export const PaginatedTable = <
   SearchPaginationDTO extends PaginationFilter,
@@ -28,6 +30,7 @@ export const PaginatedTable = <
   columns,
   onPageChanged,
   onPageSizeChanged,
+  searchFilter,
 }: PaginatedTableProps<SearchPaginationDTO, Entry>) => {
   const paginationQuery = useSearchPagination({
     queryKeyName: queryKeyName,
@@ -48,6 +51,7 @@ export const PaginatedTable = <
 
   return (
     <div>
+      <SearchFilter searchFilter={searchFilter} queryKeyName={queryKeyName} />
       <Table data={paginationQuery.data?.data} columns={columns} />
       <Pagination<SearchPaginationDTO, Entry, TGenerics>
         queryKeyName={queryKeyName}

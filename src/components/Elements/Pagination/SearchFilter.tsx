@@ -19,7 +19,7 @@ export const SearchFilter = <TGenerics extends DefaultLocationGenerics = Default
     UpdateOrderBy,
     SetAdvancedSearchKeyword,
     SetKeyword,
-    UpdateCustomProperty,
+    //UpdateCustomProperty,
   } = useSearchPaginationFilters<TGenerics>({ queryKeyName: queryKeyName });
 
   if (!searchFilter) return null;
@@ -29,25 +29,6 @@ export const SearchFilter = <TGenerics extends DefaultLocationGenerics = Default
       <Form onSubmit={async () => {}}>
         {({ register }) => (
           <>
-            <div className="mt-2">
-              <p>Custom Properties:</p>
-              <div className="flex flex-row gap-3 flex-wrap mt-2">
-                {searchFilter.customProperties?.map((customProperty, index) => (
-                  <InputField
-                    key={index}
-                    type={customProperty.type}
-                    label={customProperty.name}
-                    registration={register(customProperty.name, {
-                      onChange: async (value) => {
-                        customProperty.value = value?.target?.checked || value?.target?.value;
-                        await UpdateCustomProperty(customProperty);
-                      },
-                    })}
-                  />
-                ))}
-              </div>
-            </div>
-
             <InputField
               type="text"
               label="keyword"
@@ -111,3 +92,28 @@ export const SearchFilter = <TGenerics extends DefaultLocationGenerics = Default
     </div>
   );
 };
+
+/* TODO: Add custom properties, when they are supported
+<div className="mt-2">
+              <p>Custom Properties:</p>
+              <div className="flex flex-row gap-3 flex-wrap mt-2">
+                {searchFilter.customProperties?.map((customProperty, index) => (
+                  <InputField
+                    key={index}
+                    type={customProperty.type}
+                    label={customProperty.name}
+                    registration={register(customProperty.name, {
+                      onChange: async (value) => {
+                        customProperty.value = value?.target?.checked || value?.target?.value;
+                        await UpdateCustomProperty(customProperty);
+                      },
+                      setValueAs: async () => await UpdateCustomProperty(customProperty),
+                      value:
+                        currentSearchFilter?.customProperties?.includes(customProperty) ??
+                        customProperty.value,
+                    })}
+                  />
+                ))}
+              </div>
+            </div>
+*/

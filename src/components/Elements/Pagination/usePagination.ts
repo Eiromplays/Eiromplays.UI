@@ -44,7 +44,7 @@ export const usePagination = <
   });
 
   const navigate = useNavigate<TGenerics>();
-  const { pagination } = useSearch<TGenerics>();
+  const { pagination, searchFilter } = useSearch<TGenerics>();
 
   const paginationResponse = searchPaginationQuery.data as PaginationResponse<Entry>;
 
@@ -61,7 +61,7 @@ export const usePagination = <
       prefetchSearchData.pageNumber = prefetchPage;
       await queryClient.prefetchQuery(
         [queryKeyName, prefetchPage, prefetchSearchData.pageSize],
-        () => searchPagination(url, prefetchSearchData)
+        () => searchPagination(url, prefetchSearchData, searchFilter)
       );
     };
 
