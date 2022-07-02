@@ -42,6 +42,25 @@ export const useSearchPaginationFilters = <
     [currentFilter, navigate, queryKeyName]
   );
 
+  const UpdateAllOrderBy = React.useCallback(
+    async (orderByArray: string[]) => {
+      navigate({
+        search: (old: any) => {
+          return {
+            ...old,
+            searchFilter: {
+              ...old?.searchFilter,
+              orderBy: orderByArray,
+            },
+          };
+        },
+        replace: true,
+      });
+      await removeQuery();
+    },
+    [currentFilter, navigate, queryKeyName]
+  );
+
   const UpdateAdvancedSearchField = React.useCallback(
     async (fieldName: string) => {
       navigate({
@@ -60,6 +79,31 @@ export const useSearchPaginationFilters = <
                       (f: string) => f !== fieldName
                     )
                   : [...(old.searchFilter.advancedSearch.fields || []), fieldName],
+              },
+            },
+          };
+        },
+        replace: true,
+      });
+      await removeQuery();
+    },
+    [currentFilter, navigate, queryKeyName]
+  );
+
+  const UpdateAdvancedSearchFields = React.useCallback(
+    async (fieldNames: string[]) => {
+      navigate({
+        search: (old: any) => {
+          old.searchFilter ??= {};
+          old.searchFilter.advancedSearch ??= { fields: [] };
+
+          return {
+            ...old,
+            searchFilter: {
+              ...old?.searchFilter,
+              advancedSearch: {
+                ...old?.searchFilter?.advancedSearch,
+                fields: fieldNames,
               },
             },
           };
@@ -141,6 +185,8 @@ export const useSearchPaginationFilters = <
     SetAdvancedSearchKeyword,
     UpdateCustomProperty,
     UpdateOrderBy,
+    UpdateAllOrderBy,
     UpdateAdvancedSearchField,
+    UpdateAdvancedSearchFields,
   };
 };

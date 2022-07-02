@@ -25,8 +25,8 @@ export const useDarkMode = () => {
 
   const toggleTheme = React.useCallback(
     () => setTheme((currentTheme: string) => (currentTheme === 'dark' ? 'light' : 'dark')),
-    []
+    [setTheme]
   );
 
-  return { colorTheme, toggleTheme };
+  return { currentTheme: theme, colorTheme, toggleTheme };
 };

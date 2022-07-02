@@ -1,3 +1,5 @@
+import { SearchFilterSelectOption } from '@/components/Elements/Pagination/SearchFilter';
+
 export type BaseEntry = {
   id?: string;
 };
