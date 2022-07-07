@@ -49,6 +49,10 @@ if (UseAxiosInterceptors.response) {
         messages.push(error.response?.data?.error);
       }
 
+      if (error.response?.data?.errors) {
+        messages.push(error.response?.data?.errors);
+      }
+
       if (error.response?.data?.supportMessage) {
         messages.push(error.response?.data?.supportMessage);
       }
