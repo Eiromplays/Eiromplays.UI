@@ -1,10 +1,10 @@
 import React from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
 
-import { useDarkMode } from '@/hooks/useDarkMode';
+import { useTheme } from '@/hooks/useTheme';
 
 export const ThemeToggle = () => {
-  const { colorTheme, toggleTheme } = useDarkMode();
+  const { colorTheme, toggleTheme } = useTheme();
 
   return (
     <div className="transition duration-500 ease-in-out rounded-full p-2">

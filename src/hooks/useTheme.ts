@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export const useDarkMode = () => {
+export const useTheme = () => {
   const [theme, setTheme] = React.useState<string>(
     typeof window !== 'undefined'
       ? localStorage.theme

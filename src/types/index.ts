@@ -1,5 +1,3 @@
-import { SearchFilterSelectOption } from '@/components/Elements/Pagination/SearchFilter';
-
 export type BaseEntry = {
   id?: string;
 };
@@ -11,6 +9,12 @@ export type BaseEntity = BaseEntry & {
 export type Claim = {
   type: string;
   value: string;
+};
+
+export type CustomClaim = {
+  type: string;
+  propertyName?: string;
+  valueType?: string;
 };
 
 export type WhitelistAxiosError = {

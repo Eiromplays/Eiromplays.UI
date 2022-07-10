@@ -1,12 +1,14 @@
+import { boolean } from 'zod';
+
 import { axios } from '@/lib/axios';
-import { Claim } from '@/types';
+import { Claim, CustomClaim } from '@/types';
 import { formatDate } from '@/utils/format';
 
 import { AuthUser } from '../types';
 
 export type GetUserProps = {
   authenticatedProps?: AuthenticatedProps;
-  customClaims?: Claim[];
+  customClaims?: CustomClaim[];
   silentLoginProps?: SilentLoginProps;
 };
 
@@ -61,13 +63,31 @@ export const getUser = async <User extends AuthUser | null | undefined = AuthUse
     ),
   };
 
-  customClaims.forEach((claim: Claim) => {
-    const userClaim = userSessionInfo?.find((userClaim: Claim) => userClaim.type === claim.type);
+  customClaims.forEach((customClaim: CustomClaim) => {
+    const userClaim = userSessionInfo?.find(
+      (userClaim: Claim) => userClaim.type === customClaim.type
+    );
+
     if (!userClaim) return;
-    currentUser[claim.type] = userClaim.value;
+
+    try {
+      switch (customClaim.valueType) {
+        case 'boolean':
+          currentUser[customClaim.propertyName ?? customClaim.type] =
+            userClaim.value.toLowerCase() === 'true';
+          break;
+        case 'number':
+          currentUser[customClaim.propertyName ?? customClaim.type] = +userClaim.value;
+          break;
+        default:
+          currentUser[customClaim.propertyName ?? customClaim.type] = userClaim.value;
+      }
+    } catch (_) {
+      // Ignore: Won't set the property if there is no valid type or value
+    }
   });
 
-  if (currentUser?.id) return currentUser as User;
+  if (currentUser?.id) return currentUser;
 
   return null;
 };

@@ -5,7 +5,7 @@ import makeAnimated from 'react-select/animated';
 import CreatableSelect from 'react-select/creatable';
 
 import { Form, InputField } from '@/components/Form';
-import { useDarkMode } from '@/hooks';
+import { useTheme } from '@/hooks';
 import { DefaultLocationGenerics } from '@/providers';
 import { SearchFilter as SearchFilterType } from '@/types';
 
@@ -29,7 +29,7 @@ export const SearchFilter = <TGenerics extends DefaultLocationGenerics = Default
   searchFilter,
 }: SearchFilterProps) => {
   const { searchFilter: currentSearchFilter } = useSearch<TGenerics>();
-  const { currentTheme } = useDarkMode();
+  const { currentTheme } = useTheme();
 
   const {
     UpdateAdvancedSearchFields,
