@@ -1,5 +1,3 @@
-import { boolean } from 'zod';
-
 import { axios } from '@/lib/axios';
 import { Claim, CustomClaim } from '@/types';
 import { formatDate } from '@/utils/format';
@@ -120,7 +118,8 @@ export const silentLogin = ({
     } else if (e.data && e.data.source === 'bff-silent-login' && !e.data.isLoggedIn) {
       // we now have a user logged in silently, so reload this window
 
-      if (redirectIfSilentLoginFailed) window.location.href = '/bff/login';
+      if (redirectIfSilentLoginFailed)
+        window.location.href = `/bff/login?returnUrl=${window.location.pathname}`;
     }
   });
 };
