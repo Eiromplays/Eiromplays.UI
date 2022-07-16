@@ -47,12 +47,12 @@ export const PaginatedTable = <
     );
   }
 
-  if (!paginationQuery.data) return null;
+  if (!paginationQuery?.data?.data) return null;
 
   return (
     <div>
       <SearchFilter searchFilter={searchFilter} queryKeyName={queryKeyName} />
-      <Table data={paginationQuery.data?.data} columns={columns} />
+      <Table data={paginationQuery.data.data || []} columns={columns} />
       <Pagination<SearchPaginationDTO, Entry, TGenerics>
         queryKeyName={queryKeyName}
         url={url}
