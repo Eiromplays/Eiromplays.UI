@@ -1,25 +1,27 @@
 import { useNavigate, useSearch } from '@tanstack/react-location';
 import React from 'react';
+import { QueryKey } from 'react-query/types/core/types';
 
 import { queryClient } from '@/lib';
 import { DefaultLocationGenerics } from '@/providers';
 import { CustomSearchProperty } from '@/types';
 
-export type UseSearchPaginationProps = {
-  queryKeyName?: string;
+export type UseSearchPaginationProps<TQueryKey extends QueryKey = QueryKey> = {
+  queryKeyName: TQueryKey;
 };
 
 export const useSearchPaginationFilters = <
-  TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
+  TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics,
+  TQueryKey extends QueryKey = QueryKey
 >({
   queryKeyName,
-}: UseSearchPaginationProps) => {
+}: UseSearchPaginationProps<TQueryKey>) => {
   const navigate = useNavigate<TGenerics>();
-  const { searchFilter: currentFilter, pagination } = useSearch<TGenerics>();
+  const { pagination } = useSearch<TGenerics>();
 
-  const removeQuery = async () => {
+  const removeQuery = React.useCallback(async () => {
     await queryClient.removeQueries([queryKeyName, pagination?.index || 1, pagination?.size || 10]);
-  };
+  }, [queryKeyName, pagination?.index, pagination?.size]);
 
   const UpdateOrderBy = React.useCallback(
     async (orderByName: string) => {
@@ -39,7 +41,7 @@ export const useSearchPaginationFilters = <
       });
       await removeQuery();
     },
-    [currentFilter, navigate, queryKeyName]
+    [navigate, removeQuery]
   );
 
   const UpdateAllOrderBy = React.useCallback(
@@ -58,7 +60,7 @@ export const useSearchPaginationFilters = <
       });
       await removeQuery();
     },
-    [currentFilter, navigate, queryKeyName]
+    [navigate, removeQuery]
   );
 
   const UpdateAdvancedSearchField = React.useCallback(
@@ -87,7 +89,7 @@ export const useSearchPaginationFilters = <
       });
       await removeQuery();
     },
-    [currentFilter, navigate, queryKeyName]
+    [navigate, removeQuery]
   );
 
   const UpdateAdvancedSearchFields = React.useCallback(
@@ -112,7 +114,7 @@ export const useSearchPaginationFilters = <
       });
       await removeQuery();
     },
-    [currentFilter, navigate, queryKeyName]
+    [navigate, removeQuery]
   );
 
   const UpdateCustomProperty = React.useCallback(
@@ -136,7 +138,7 @@ export const useSearchPaginationFilters = <
       });
       await removeQuery();
     },
-    [currentFilter, navigate, queryKeyName]
+    [navigate, removeQuery]
   );
 
   const SetKeyword = React.useCallback(
@@ -155,7 +157,7 @@ export const useSearchPaginationFilters = <
       });
       await removeQuery();
     },
-    [currentFilter, navigate, queryKeyName]
+    [navigate, removeQuery]
   );
 
   const SetAdvancedSearchKeyword = React.useCallback(
@@ -177,7 +179,7 @@ export const useSearchPaginationFilters = <
       });
       await removeQuery();
     },
-    [currentFilter, navigate, queryKeyName]
+    [navigate, removeQuery]
   );
 
   return {

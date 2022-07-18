@@ -10,3 +10,4 @@ export * from './Pagination';
 export * from './NotFound';
 export * from './Stats';
 export * from './Charts';
+export * from './Breadcrumbs';

@@ -9,9 +9,9 @@ import { ToastContainer } from 'react-toastify';
 
 import { Button, Spinner } from '@/components/Elements';
 import { AuthProvider, queryClient } from '@/lib';
+import { SearchFilter } from '@/types';
 
 import 'react-toastify/dist/ReactToastify.css';
-import { SearchFilter } from '@/types';
 
 const ErrorFallback = () => {
   return (
@@ -53,16 +53,20 @@ export type DefaultLocationGenerics = MakeGenerics<{
     logoutId: string;
     searchFilter: SearchFilter;
   };
+  RouteMeta: {
+    breadcrumb: (params: DefaultLocationGenerics['Params']) => React.ReactElement | string;
+  };
 }>;
 
-type AppProviderProps<TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics> = {
-  routes?: Route<TGenerics>[];
-  routesFunctions?: () => Route<TGenerics>;
-  location?: ReactLocation<TGenerics>;
-  createDefaultOutlet?: boolean;
-  children?: React.ReactNode;
-  CustomAuthProvider?: React.ComponentType<any>;
-};
+export type AppProviderProps<TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics> =
+  {
+    routes?: Route<TGenerics>[];
+    routesFunctions?: () => Route<TGenerics>;
+    location?: ReactLocation<TGenerics>;
+    createDefaultOutlet?: boolean;
+    children?: React.ReactNode;
+    CustomAuthProvider?: React.ComponentType<any>;
+  };
 
 export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics>({
   routes = [],
@@ -86,7 +90,7 @@ export const AppProvider = <TGenerics extends DefaultLocationGenerics = DefaultL
             <CustomAuthProvider>
               <Router
                 location={location}
-                routes={routes || (routesFunctions && routesFunctions())}
+                routes={routes || routesFunctions?.()}
                 defaultPendingElement={
                   <div className="flex items-center justify-center w-screen h-screen dark:bg-lighter-black">
                     <Spinner size="xl" />

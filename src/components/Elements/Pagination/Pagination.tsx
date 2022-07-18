@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
+import { QueryKey } from 'react-query/types/core/types';
 import { OnChangeValue } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
@@ -18,20 +19,22 @@ import { defaultPageSize, usePagination, UsePaginationProps } from './usePaginat
 
 export type PaginationProps<
   SearchPaginationDTO extends PaginationFilter,
-  Entry extends BaseEntry | any
-> = UsePaginationProps<SearchPaginationDTO, Entry>;
+  Entry extends BaseEntry | any,
+  TQueryKey extends QueryKey = QueryKey
+> = UsePaginationProps<SearchPaginationDTO, Entry, TQueryKey>;
 
 export const Pagination = <
   SearchPaginationDTO extends PaginationFilter,
   Entry extends BaseEntry | any,
-  TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
+  TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics,
+  TQueryKey extends QueryKey = QueryKey
 >({
   queryKeyName,
   url,
   searchData,
   onPageChanged,
   onPageSizeChanged,
-}: PaginationProps<SearchPaginationDTO, Entry>) => {
+}: PaginationProps<SearchPaginationDTO, Entry, TQueryKey>) => {
   const {
     SetPage,
     SetPageSize,
@@ -42,7 +45,7 @@ export const Pagination = <
     totalPages,
     paginationResponse,
     isLoading,
-  } = usePagination<SearchPaginationDTO, Entry, TGenerics>({
+  } = usePagination<SearchPaginationDTO, Entry, TGenerics, TQueryKey>({
     onPageChanged: onPageChanged,
     onPageSizeChanged: onPageSizeChanged,
     queryKeyName: queryKeyName,
