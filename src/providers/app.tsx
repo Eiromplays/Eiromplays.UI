@@ -58,6 +58,8 @@ export type DefaultLocationGenerics = MakeGenerics<{
   };
 }>;
 
+export type valueOf<T> = T[keyof T];
+
 export type AppProviderProps<TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics> =
   {
     routes?: Route<TGenerics>[];
