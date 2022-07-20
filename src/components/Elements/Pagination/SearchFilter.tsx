@@ -62,81 +62,78 @@ export const SearchFilter = <TGenerics extends DefaultLocationGenerics = Default
               <div className="flex flex-col">
                 <p>Order By:</p>
                 <div className="flex flex-row gap-3 flex-wrap mt-2">
-                  {
-                    <CreatableSelect
-                      isMulti
-                      onChange={async (newValue: OnChangeValue<SearchFilterSelectOption, true>) => {
-                        await UpdateAllOrderBy(newValue.map((item) => item.value));
-                      }}
-                      options={searchFilter?.orderBy?.map((item) => ({ value: item, label: item }))}
-                      defaultValue={currentSearchFilter?.orderBy?.map((item) => ({
-                        value: item,
-                        label: item,
-                      }))}
-                      components={animatedComponents as any}
-                      theme={(theme) =>
-                        currentTheme === 'dark'
-                          ? {
-                              ...theme,
-                              colors: {
-                                ...theme.colors,
-                                primary: '#0a0e17',
-                                primary25: 'gray',
-                                primary50: '#fff',
-                                neutral0: '#0a0e17',
-                              },
-                            }
-                          : {
-                              ...theme,
-                              colors: {
-                                ...theme.colors,
-                              },
-                            }
-                      }
-                    />
-                  }
+                  <CreatableSelect
+                    isMulti
+                    onChange={async (newValue: OnChangeValue<SearchFilterSelectOption, true>) => {
+                      await UpdateAllOrderBy(newValue.map((item) => item.value));
+                    }}
+                    options={searchFilter?.orderBy?.map((item) => ({ value: item, label: item }))}
+                    defaultValue={currentSearchFilter?.orderBy?.map((item) => ({
+                      value: item,
+                      label: item,
+                    }))}
+                    components={animatedComponents as any}
+                    theme={(theme) =>
+                      currentTheme === 'dark'
+                        ? {
+                            ...theme,
+                            colors: {
+                              ...theme.colors,
+                              primary: '#0a0e17',
+                              primary25: 'gray',
+                              primary50: '#fff',
+                              neutral0: '#0a0e17',
+                            },
+                          }
+                        : {
+                            ...theme,
+                            colors: {
+                              ...theme.colors,
+                            },
+                          }
+                    }
+                  />
                 </div>
               </div>
               <div className="flex flex-col ml-3">
                 <p>Advanced Search:</p>
                 <div className="flex flex-row gap-3 flex-wrap mt-2">
-                  {
-                    <CreatableSelect
-                      isMulti
-                      onChange={async (newValue: OnChangeValue<SearchFilterSelectOption, true>) => {
-                        await UpdateAdvancedSearchFields(newValue.map((item) => item.value));
-                      }}
-                      options={searchFilter?.advancedSearch?.fields?.map((item) => ({
-                        value: item,
-                        label: item,
-                      }))}
-                      defaultValue={currentSearchFilter?.advancedSearch?.fields?.map((item) => ({
-                        value: item,
-                        label: item,
-                      }))}
-                      components={animatedComponents as any}
-                      theme={(theme) =>
-                        currentTheme === 'dark'
-                          ? {
-                              ...theme,
-                              colors: {
-                                ...theme.colors,
-                                primary: '#0a0e17',
-                                primary25: 'gray',
-                                primary50: '#fff',
-                                neutral0: '#0a0e17',
-                              },
-                            }
-                          : {
-                              ...theme,
-                              colors: {
-                                ...theme.colors,
-                              },
-                            }
-                      }
-                    />
-                  }
+                  <CreatableSelect
+                    isMulti
+                    onChange={async (newValue: OnChangeValue<SearchFilterSelectOption, true>) => {
+                      await UpdateAdvancedSearchFields(newValue.map((item) => item.value));
+                    }}
+                    options={searchFilter?.advancedSearch?.fields?.map((item) => ({
+                      value: item,
+                      label: item,
+                    }))}
+                    defaultValue={currentSearchFilter?.advancedSearch?.fields?.map((item) => ({
+                      value: item,
+                      label: item,
+                    }))}
+                    components={animatedComponents as any}
+                    theme={(theme) =>
+                      currentTheme === 'dark'
+                        ? {
+                            ...theme,
+                            colors: {
+                              ...theme.colors,
+                              primary: '#0a0e17',
+                              primary25: 'gray',
+                              primary50: '#fff',
+                              neutral0: '#0a0e17',
+                            },
+                          }
+                        : {
+                            ...theme,
+                            colors: {
+                              ...theme.colors,
+                            },
+                          }
+                    }
+                  />
                   <InputField
+                    className="mb-2"
                     type="text"
                     label="keyword"
                     registration={register('advancedSearch-keyword', {

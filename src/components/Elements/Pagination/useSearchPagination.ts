@@ -1,6 +1,5 @@
 import { useSearch } from '@tanstack/react-location';
-import { useQuery } from 'react-query';
-import { QueryKey } from 'react-query/types/core/types';
+import { useQuery, QueryKey } from '@tanstack/react-query';
 
 import { axios, ExtractFnReturnType, QueryConfig } from '@/lib';
 import { DefaultLocationGenerics } from '@/providers';
@@ -46,11 +45,13 @@ export const useSearchPagination = <
 }: UseSearchPaginationProps<SearchPaginationDTO, Entry, TQueryKey>) => {
   const { searchFilter } = useSearch<TGenerics>();
 
-  return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>({
-    ...config,
-    queryKey: [queryKeyName, searchData.pageNumber, searchData.pageSize],
-    queryFn: () => searchPagination<SearchPaginationDTO, Entry>(url, searchData, searchFilter),
-  });
+  return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>(
+    [queryKeyName, searchData.pageNumber, searchData.pageSize],
+    () => searchPagination<SearchPaginationDTO, Entry>(url, searchData, searchFilter),
+    {
+      ...config,
+    }
+  );
 };
 
 export const setSearchFilter = <SearchPaginationDTO extends PaginationFilter>(

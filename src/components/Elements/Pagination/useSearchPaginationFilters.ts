@@ -1,6 +1,6 @@
 import { useNavigate, useSearch } from '@tanstack/react-location';
+import { QueryKey } from '@tanstack/react-query';
 import React from 'react';
-import { QueryKey } from 'react-query/types/core/types';
 
 import { queryClient } from '@/lib';
 import { DefaultLocationGenerics } from '@/providers';

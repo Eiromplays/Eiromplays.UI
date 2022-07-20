@@ -1,5 +1,5 @@
 import { Dialog, Menu, Transition } from '@headlessui/react';
-import { Link } from '@tanstack/react-location';
+import { Link, MatchRoute } from '@tanstack/react-location';
 import clsx from 'clsx';
 import * as React from 'react';
 import {
@@ -16,7 +16,7 @@ import { MdOutlineDevicesOther, MdOutlineHistory } from 'react-icons/md';
 import { ThemeToggle } from '@/components/Theme';
 import { useAuth } from '@/lib/auth';
 
-import { Button } from '../Elements';
+import { Button, Spinner } from '../Elements';
 
 type SideNavigationItem = {
   name: string;
@@ -100,7 +100,10 @@ const SideNavigation = ({
                 aria-hidden="true"
               />
             )}
-            {item.name}
+            {item.name}{' '}
+            <MatchRoute to={item.to} pending>
+              <Spinner size="md" className="inline-block" />
+            </MatchRoute>
           </Link>
         );
       })}
@@ -253,7 +256,10 @@ const UserNavigation = ({
                               aria-hidden="true"
                             />
                           )}
-                          {item.name}
+                          {item.name}{' '}
+                          <MatchRoute to={item.to} pending>
+                            <Spinner size="md" className="inline-block" />
+                          </MatchRoute>
                         </Link>
                       )}
                     </>

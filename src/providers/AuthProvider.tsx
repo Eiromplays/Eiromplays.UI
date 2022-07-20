@@ -1,7 +1,6 @@
 // Original source code: https://github.com/alan2207/react-query-auth
 // Author: Alan Alickovic Modified by Eirik Sjøløkken
 
-import React from 'react';
 import {
   useQuery,
   useMutation,
@@ -9,7 +8,8 @@ import {
   UseMutateAsyncFunction,
   QueryObserverResult,
   RefetchOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
+import React from 'react';
 
 // eslint-disable-next-line import/order
 import { Spinner } from '@/components/Elements';
@@ -104,16 +104,14 @@ export function initReactQueryAuth<
       error,
       status,
       isLoading,
-      isIdle,
       isSuccess,
       refetch,
-    } = useQuery<User, Error>({
-      queryKey: key,
+    } = useQuery<User, Error>([key], {
       queryFn: loadUser,
     });
 
     const setUser = React.useCallback(
-      (data: User) => queryClient.setQueryData(key, data),
+      (data: User) => queryClient.setQueryData([key], data),
       [queryClient]
     );
     const loginMutation = useMutation({
@@ -188,7 +186,7 @@ export function initReactQueryAuth<
       return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
     }
 
-    if (isLoading || isIdle) {
+    if (isLoading) {
       return <LoaderComponent />;
     }
 

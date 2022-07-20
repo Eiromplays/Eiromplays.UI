@@ -1,13 +1,14 @@
-import { useMatches } from '@tanstack/react-location';
+import { MatchRoute, useMatches, useSearch } from '@tanstack/react-location';
 import React from 'react';
 
-import { Link } from '@/components/Elements';
+import { Link, Spinner } from '@/components/Elements';
 import { DefaultLocationGenerics } from '@/providers';
 
 export const Breadcrumbs = <
   TGenerics extends DefaultLocationGenerics = DefaultLocationGenerics
 >() => {
   let matches = useMatches<TGenerics>();
+  const search = useSearch<TGenerics>();
 
   matches = matches.filter(
     (match) => match.route.meta && match.route.meta.breadcrumb(match.params)
@@ -21,8 +22,13 @@ export const Breadcrumbs = <
         {matches?.map((match, index) => (
           <li key={index} className="flex items-center">
             <span className="mx-2 text-gray-900 dark:text-gray-300">/</span>
-            <Link to={match.pathname}>
-              {match.route.meta && match.route.meta.breadcrumb(match.params)}
+            <Link to={match.pathname} search={search} className="block">
+              <pre className={`text-sm`}>
+                {match.route.meta && match.route.meta.breadcrumb(match.params)}{' '}
+                <MatchRoute to={match.pathname} pending>
+                  <Spinner size="md" className="inline-block" />
+                </MatchRoute>
+              </pre>
             </Link>
           </li>
         ))}
