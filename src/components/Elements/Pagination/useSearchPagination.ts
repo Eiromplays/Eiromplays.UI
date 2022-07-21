@@ -45,13 +45,11 @@ export const useSearchPagination = <
 }: UseSearchPaginationProps<SearchPaginationDTO, Entry, TQueryKey>) => {
   const { searchFilter } = useSearch<TGenerics>();
 
-  return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>(
-    [queryKeyName, searchData.pageNumber, searchData.pageSize],
-    () => searchPagination<SearchPaginationDTO, Entry>(url, searchData, searchFilter),
-    {
-      ...config,
-    }
-  );
+  return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>({
+    queryKey: [...queryKeyName, searchData.pageNumber, searchData.pageSize],
+    queryFn: () => searchPagination<SearchPaginationDTO, Entry>(url, searchData, searchFilter),
+    ...config,
+  });
 };
 
 export const setSearchFilter = <SearchPaginationDTO extends PaginationFilter>(

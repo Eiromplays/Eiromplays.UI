@@ -106,7 +106,8 @@ export function initReactQueryAuth<
       isLoading,
       isSuccess,
       refetch,
-    } = useQuery<User, Error>([key], {
+    } = useQuery<User, Error>({
+      queryKey: [key],
       queryFn: loadUser,
     });
 
