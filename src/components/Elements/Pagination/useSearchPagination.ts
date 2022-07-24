@@ -46,7 +46,7 @@ export const useSearchPagination = <
   const { searchFilter } = useSearch<TGenerics>();
 
   return useQuery<ExtractFnReturnType<QueryFnType<Entry>>>({
-    queryKey: [...queryKeyName, searchData.pageNumber, searchData.pageSize],
+    queryKey: queryKeyName?.concat(searchData.pageNumber, searchData.pageSize),
     queryFn: () => searchPagination<SearchPaginationDTO, Entry>(url, searchData, searchFilter),
     ...config,
   });

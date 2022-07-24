@@ -20,7 +20,9 @@ export const useSearchPaginationFilters = <
   const { pagination } = useSearch<TGenerics>();
 
   const removeQuery = React.useCallback(async () => {
-    await queryClient.removeQueries([queryKeyName, pagination?.index || 1, pagination?.size || 10]);
+    await queryClient.removeQueries(
+      queryKeyName?.concat(pagination?.index || 1, pagination?.size || 10)
+    );
   }, [queryKeyName, pagination?.index, pagination?.size]);
 
   const UpdateOrderBy = React.useCallback(

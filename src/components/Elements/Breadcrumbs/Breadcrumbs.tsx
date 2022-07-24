@@ -18,9 +18,9 @@ export const Breadcrumbs = <
 
   return (
     <div className="bg-gray-200 dark:bg-lighter-black p-3 rounded font-sans m-4">
-      <ol className="list-reset flex text-gray-900 dark:text-gray-300">
+      <ol className="list-reset flex flex-wrap text-gray-900 dark:text-gray-300">
         {matches?.map((match, index) => (
-          <li key={index} className="flex items-center">
+          <li key={index} className="flex flex-wrap items-center">
             <span className="mx-2 text-gray-900 dark:text-gray-300">/</span>
             <Link to={match.pathname} search={search} className="block">
               <pre className={`text-sm`}>

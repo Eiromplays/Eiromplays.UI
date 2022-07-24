@@ -63,18 +63,31 @@ export const usePagination = <
 
   React.useEffect(() => {
     const prefetchNextPage = async () => {
-      if (!shouldPrefetchNextPage || !paginationResponse.hasNextPage) return;
+      if (!shouldPrefetchNextPage || !paginationResponse?.hasNextPage || currentPage == totalPages)
+        return;
+
       const prefetchSearchData = { ...searchData };
       const prefetchPage = currentPage + 1;
       prefetchSearchData.pageNumber = prefetchPage;
-      await queryClient.prefetchQuery(
-        [queryKeyName, prefetchPage, prefetchSearchData.pageSize],
-        () => searchPagination(url, prefetchSearchData, searchFilter)
-      );
+
+      await queryClient.prefetchQuery({
+        queryKey: queryKeyName?.concat(prefetchPage, prefetchSearchData.pageSize),
+        queryFn: () =>
+          searchPagination<SearchPaginationDTO, Entry>(url, prefetchSearchData, searchFilter),
+      });
     };
 
     prefetchNextPage().catch(console.error);
-  }, [shouldPrefetchNextPage, paginationResponse, queryKeyName, searchData, url, currentPage]);
+  }, [
+    shouldPrefetchNextPage,
+    paginationResponse,
+    queryKeyName,
+    searchData,
+    url,
+    currentPage,
+    searchFilter,
+    totalPages,
+  ]);
 
   const NextPage = () => {
     if (!paginationResponse.hasNextPage) return;

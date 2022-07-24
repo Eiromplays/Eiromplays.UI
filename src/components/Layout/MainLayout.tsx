@@ -18,7 +18,7 @@ import { useAuth } from '@/lib/auth';
 
 import { Button, Spinner } from '../Elements';
 
-type SideNavigationItem = {
+export type SideNavigationItem = {
   name: string;
   to: string;
   target?: string;
@@ -26,11 +26,11 @@ type SideNavigationItem = {
   icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
 };
 
-type SideNavigationProps = {
+export type SideNavigationProps = {
   items?: SideNavigationItem[];
 };
 
-const SideNavigation = ({
+export const SideNavigation = ({
   items = [
     { name: 'Dashboard', to: '.', icon: HiOutlineHome },
     { name: 'Users', to: 'users', icon: HiOutlineUsers },
@@ -100,7 +100,7 @@ const SideNavigation = ({
                 aria-hidden="true"
               />
             )}
-            {item.name}{' '}
+            <span className="mr-1.5">{item.name}</span>
             <MatchRoute to={item.to} pending>
               <Spinner size="md" className="inline-block" />
             </MatchRoute>
@@ -111,7 +111,7 @@ const SideNavigation = ({
   );
 };
 
-type UserNavigationItem = {
+export type UserNavigationItem = {
   name: string;
   to: string;
   target?: string;
@@ -120,7 +120,7 @@ type UserNavigationItem = {
   icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
 };
 
-type UserNavigationProps = {
+export type UserNavigationProps = {
   items?: UserNavigationItem[];
   addProfileItem?: boolean;
   addSignOutItem?: boolean;
@@ -128,7 +128,7 @@ type UserNavigationProps = {
   identityServerUiUrl?: string;
 };
 
-const UserNavigation = ({
+export const UserNavigation = ({
   items = [],
   addProfileItem = true,
   addSignOutItem = true,
@@ -256,7 +256,7 @@ const UserNavigation = ({
                               aria-hidden="true"
                             />
                           )}
-                          {item.name}{' '}
+                          <span className="mr-1.5">{item.name}</span>
                           <MatchRoute to={item.to} pending>
                             <Spinner size="md" className="inline-block" />
                           </MatchRoute>
@@ -274,16 +274,17 @@ const UserNavigation = ({
   );
 };
 
-type MobileSidebarProps = LogoProps &
+export type MobileSidebarProps = LogoProps &
   SideNavigationProps & {
     sidebarOpen: boolean;
     setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   };
 
-const MobileSidebar = ({
+export const MobileSidebar = ({
   sidebarOpen,
   setSidebarOpen,
   logo,
+  applicationLogoText,
   items: sideNavigationItems,
 }: MobileSidebarProps) => {
   return (
@@ -336,7 +337,7 @@ const MobileSidebar = ({
               </div>
             </Transition.Child>
             <div className="flex-shrink-0 flex items-center px-4">
-              <Logo logo={logo} />
+              <Logo logo={logo} applicationLogoText={applicationLogoText} />
             </div>
             <div className="mt-5 flex-1 h-0 overflow-y-auto">
               <nav className="px-2 space-y-1">
@@ -351,15 +352,15 @@ const MobileSidebar = ({
   );
 };
 
-type SideBarProps = LogoProps & SideNavigationProps;
+export type SideBarProps = LogoProps & SideNavigationProps;
 
-const Sidebar = ({ logo, items }: SideBarProps) => {
+export const Sidebar = ({ logo, applicationLogoText, items }: SideBarProps) => {
   return (
     <div className="hidden md:flex md:flex-shrink-0">
       <div className="flex flex-col w-64">
         <div className="flex flex-col h-0 flex-1">
           <div className="flex items-center h-16 flex-shrink-0 px-4 bg-gray-900 dark:bg-indigo-900">
-            <Logo logo={logo} />
+            <Logo logo={logo} applicationLogoText={applicationLogoText} />
           </div>
           <div className="flex-1 flex flex-col overflow-y-auto">
             <nav className="flex-1 px-2 py-4 bg-gray-800 dark:bg-lighter-black space-y-1">
@@ -374,18 +375,21 @@ const Sidebar = ({ logo, items }: SideBarProps) => {
 
 export type LogoProps = {
   logo?: string | undefined;
+  applicationLogoText?: string | undefined;
 };
 
-const Logo = ({ logo }: LogoProps) => {
+export const Logo = ({ logo, applicationLogoText }: LogoProps) => {
   return (
     <Link className="flex items-center text-white" to=".">
       <img className="h-8 w-auto" src={logo} alt="Workflow" />
-      <span className="text-xl text-white font-semibold">Eiromplays IdentityServer</span>
+      <span className="text-xl text-white font-semibold">
+        {applicationLogoText ? applicationLogoText : 'Eiromplays IdentityServer'}
+      </span>
     </Link>
   );
 };
 
-type MainLayoutProps = LogoProps & {
+export type MainLayoutProps = LogoProps & {
   children: React.ReactNode;
   userNavigationProps?: UserNavigationProps;
   sideBarNavigationProps?: SideNavigationProps;

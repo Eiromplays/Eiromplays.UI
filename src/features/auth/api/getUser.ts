@@ -8,12 +8,14 @@ export type GetUserProps = {
   authenticatedProps?: AuthenticatedProps;
   customClaims?: CustomClaim[];
   silentLoginProps?: SilentLoginProps;
+  slide?: true;
 };
 
 export const getUser = async <User extends AuthUser | null | undefined = AuthUser>({
   authenticatedProps,
   customClaims = [],
   silentLoginProps,
+  slide,
 }: GetUserProps = {}): Promise<User | null> => {
   if (authenticatedProps?.useAuthenticated && authenticatedProps.isAuthenticatedUrl) {
     const isAuthenticated = await axios.get(authenticatedProps.isAuthenticatedUrl);
@@ -25,7 +27,7 @@ export const getUser = async <User extends AuthUser | null | undefined = AuthUse
 
   if (userDiagnosis) console.log(userDiagnosis);
 
-  const userSessionInfo: Claim[] = await axios.get('/bff/user');
+  const userSessionInfo: Claim[] = await axios.get(`/bff/user?slide=${slide ?? true}`);
 
   if (!userSessionInfo) {
     silentLogin(silentLoginProps);

@@ -80,3 +80,9 @@ export type SearchFilter = {
 
 export type Updater<T> = T | ((old: T) => T);
 export type OnChangeFn<T> = (updaterOrValue: Updater<T>) => void;
+
+export type BaseAxiosRequest<TData> = {
+  url: string;
+  queryKeyName: string;
+  data: TData;
+};
