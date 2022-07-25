@@ -11,7 +11,7 @@ export const Breadcrumbs = <
   const search = useSearch<TGenerics>();
 
   matches = matches.filter(
-    (match) => match.route.meta && match.route.meta.breadcrumb(match.params)
+    (match) => match.route.meta && match.route.meta.breadcrumb?.(match.params)
   );
 
   if (matches?.length <= 0) return null;
@@ -24,7 +24,7 @@ export const Breadcrumbs = <
             <span className="mx-2 text-gray-900 dark:text-gray-300">/</span>
             <Link to={match.pathname} search={search} className="block">
               <pre className={`text-sm`}>
-                {match.route.meta && match.route.meta.breadcrumb(match.params)}{' '}
+                {match.route.meta && match.route.meta.breadcrumb?.(match.params)}{' '}
                 <MatchRoute to={match.pathname} pending>
                   <Spinner size="md" className="inline-block" />
                 </MatchRoute>
