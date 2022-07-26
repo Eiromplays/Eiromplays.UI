@@ -99,6 +99,7 @@ export function initReactQueryAuth<
 
   function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     const queryClient = useQueryClient();
+
     const {
       data: user,
       error,
@@ -115,6 +116,7 @@ export function initReactQueryAuth<
       (data: User) => queryClient.setQueryData([key], data),
       [queryClient]
     );
+
     const loginMutation = useMutation({
       mutationFn: loginFn,
       onSuccess: (user) => {
@@ -143,7 +145,7 @@ export function initReactQueryAuth<
       },
     });
 
-    const isLoggedIn = !user?.id;
+    const isLoggedIn = !(user?.id == null || user?.id === '');
 
     const value = React.useMemo(
       () => ({
@@ -203,6 +205,7 @@ export function initReactQueryAuth<
     if (!context) {
       throw new Error(`useAuth must be used within an AuthProvider`);
     }
+
     return context;
   };
 
