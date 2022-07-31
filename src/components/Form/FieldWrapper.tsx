@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import React from 'react';
 import { FieldError } from 'react-hook-form';
 
-type FieldWrapperProps = {
+export type FieldWrapperProps = {
   label?: string;
   subLabel?: string;
   icon?: React.ReactNode;
   className?: string;
   children: React.ReactNode;
-  error?: FieldError | undefined;
+  error?: FieldError | FieldError[] | undefined;
   description?: string;
 };
 
@@ -23,11 +23,26 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
         {subLabel && <p className="text-xs text-gray-500 dark:text-gray-400">{subLabel}</p>}
         <div className="mt-1">{children}</div>
       </label>
-      {error?.message && (
-        <div role="alert" aria-label={error.message} className="text-sm font-semibold text-red-500">
-          {error.message}
-        </div>
-      )}
+      {Array.isArray(error)
+        ? error.map((err, i) => (
+            <div
+              key={i}
+              role="alert"
+              aria-label={err.message}
+              className="text-sm font-semibold text-red-500"
+            >
+              {err.message}
+            </div>
+          ))
+        : error?.message && (
+            <div
+              role="alert"
+              aria-label={error.message}
+              className="text-sm font-semibold text-red-500"
+            >
+              {error.message}
+            </div>
+          )}
     </div>
   );
 };
