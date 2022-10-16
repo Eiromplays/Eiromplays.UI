@@ -1,109 +1,64 @@
-import clsx from 'clsx';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop } from 'react-image-crop';
+import React from 'react';
+import AvatarEditor, { AvatarEditorProps } from 'react-avatar-editor';
 
-import { ImageCropPreview } from './ImageCropPreview';
-
-import 'react-image-crop/src/ReactCrop.scss';
-
-export type ImageCropperProps = {
+export type ImageCropperProps = AvatarEditorProps & {
   cropLabel?: string;
   previewLabel?: string;
-  imgSrc: string;
-  fileName: string;
   onFileCreated?: (file: File) => void;
 };
 
-export const ImageCropper = ({
-  cropLabel,
-  previewLabel,
-  imgSrc,
-  fileName,
-  onFileCreated,
-}: ImageCropperProps) => {
-  const imgRef = useRef<any>(null);
-  const previewCanvasRef = useRef<any>(null);
-  const [crop, setCrop] = useState<Crop>();
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop>();
+export const ImageCropper = (props: ImageCropperProps) => {
+  const { cropLabel, previewLabel, onFileCreated, ...rest } = props;
 
-  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
-    imgRef.current = e.currentTarget;
+  const editorRef = React.useRef<AvatarEditor>(null);
+  const [scale, setScale] = React.useState<number>(1);
+  const [rotate, setRotate] = React.useState<number>(0);
 
-    const { width, height } = e.currentTarget;
+  const handleScale = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const scale = parseFloat(event.target.value);
+    setScale(scale);
+  };
 
-    const crop = centerCrop(
-      makeAspectCrop(
-        {
-          unit: '%',
-          width: 40,
-        },
-        1,
-        width,
-        height
-      ),
-      width,
-      height
-    );
+  const handleRotate = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rotate = parseInt(event.target.value);
+    setRotate(rotate);
+  };
 
-    setCrop(crop);
-  }
-
-  const updateCropPreview = useCallback(() => {
-    if (completedCrop && previewCanvasRef.current && imgRef.current) {
-      ImageCropPreview(
-        imgRef.current,
-        previewCanvasRef.current,
-        completedCrop,
-        fileName,
-        onFileCreated
-      );
+  const handleSave = () => {
+    if (editorRef.current) {
+      const canvas = editorRef.current.getImageScaledToCanvas();
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const file = new File([blob], 'image.png', { type: 'image/png' });
+          onFileCreated?.(file);
+        }
+      });
     }
-  }, [completedCrop, fileName, onFileCreated]);
-
-  useEffect(() => {
-    updateCropPreview();
-  }, [updateCropPreview]);
+  };
 
   return (
-    <>
-      {imgSrc && (
-        <div>
-          <label className={clsx('block text-sm font-medium text-gray-700 dark:text-white')}>
-            {cropLabel}
-          </label>
-          <ReactCrop
-            crop={crop}
-            onChange={(_, percentCrop) => setCrop(percentCrop)}
-            onComplete={(c) => setCompletedCrop(c)}
-            aspect={1}
-          >
-            <img
-              alt={`Cropped ${fileName}`}
-              src={imgSrc}
-              style={{ transform: `scale(1) rotate(0deg)` }}
-              onLoad={onImageLoad}
-            />
-          </ReactCrop>
+    <div className="row">
+      <div className="col-md-6">
+        <div className="form-group">
+          <label>{cropLabel}</label>
+          <input type="range" min="1" max="2" step="0.01" value={scale} onChange={handleScale} />
         </div>
-      )}
-      <div>
-        {previewCanvasRef && (
-          <div>
-            <label className={clsx('block text-sm font-medium text-gray-700 dark:text-white')}>
-              {previewLabel}
-            </label>
-            <canvas
-              ref={previewCanvasRef}
-              style={{
-                // Rounding is important for sharpness.
-                width: Math.floor(completedCrop?.width ?? 0),
-                height: Math.floor(completedCrop?.height ?? 0),
-              }}
-              className="w-52 h-52 rounded-full"
-            />
-          </div>
-        )}
+        <div className="form-group">
+          <label>Rotate:</label>
+          <input type="range" min="0" max="360" step="1" value={rotate} onChange={handleRotate} />
+        </div>
+        <div className="form-group">
+          <button type="button" className="btn btn-primary" onClick={handleSave}>
+            Save
+          </button>
+        </div>
       </div>
-    </>
+      <div className="col-md-6">
+        <div className="form-group">
+          <label>{previewLabel}</label>
+          <AvatarEditor ref={editorRef} scale={scale} rotate={rotate} {...rest} />
+        </div>
+      </div>
+    </div>
   );
 };
