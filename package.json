@@ -1,6 +1,5 @@
 {
   "name": "eiromplays-ui",
-  "private": false,
   "version": "1.6.7-3",
   "scripts": {
     "build": "run-p build:*",
