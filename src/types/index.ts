@@ -1,3 +1,5 @@
+import React from 'react';
+
 export type BaseEntry = {
   id?: string;
 };
@@ -85,4 +87,15 @@ export type BaseAxiosRequest<TData> = {
   url: string;
   queryKeyName: string;
   data: TData;
+};
+
+export type StepType = {
+  label: string;
+  subLabel?: string;
+  icon?: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
+  component?: React.ComponentType<StepComponentProps>;
+};
+
+export type StepComponentProps = {
+  onFormCompleted: () => void;
 };

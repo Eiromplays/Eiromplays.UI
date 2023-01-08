@@ -11,8 +11,17 @@ type TextAreaFieldProps = FieldWrapperPassThroughProps & {
 
 export const TextAreaField = (props: TextAreaFieldProps) => {
   const { label, subLabel, className, icon, registration, error } = props;
+
   return (
-    <FieldWrapper label={label} subLabel={subLabel} icon={icon} error={error}>
+    <FieldWrapper
+      label={label}
+      subLabel={subLabel}
+      icon={icon}
+      error={{
+        name: registration.name ?? error?.name ?? '',
+        errors: error?.errors,
+      }}
+    >
       <textarea
         className={clsx(
           'appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm',

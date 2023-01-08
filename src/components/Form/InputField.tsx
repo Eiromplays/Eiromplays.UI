@@ -50,7 +50,15 @@ export const InputField = (props: InputFieldProps) => {
   } = props;
 
   return (
-    <FieldWrapper label={label} subLabel={subLabel} icon={icon} error={error}>
+    <FieldWrapper
+      label={label}
+      subLabel={subLabel}
+      icon={icon}
+      error={{
+        name: registration.name ?? error?.name ?? '',
+        errors: error?.errors,
+      }}
+    >
       <fieldset disabled={disabled}>
         {customInputField ? (
           customInputField
