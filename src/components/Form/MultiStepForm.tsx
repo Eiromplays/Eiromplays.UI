@@ -22,13 +22,14 @@ export const MultiStepForm = <
 >(
   props: MultiStepFormProps<TFormValues, Schema>
 ) => {
-  const { hasPreviousStep, formValues, prevStep, steps, currentStep } = useStepper(
+  const { formValues, prevStep, steps, currentStep } = useStepper(
     (state) => state
   );
 
   const { children, customNextButton, customPrevButton, customSubmitButton, ...rest } = props;
 
   const hasNextStep = currentStep + 1 < steps.length;
+  const hasPrevStep = currentStep - 1 >= 0;
 
   const nextButton = () => {
     if (!hasNextStep) return <></>;
@@ -54,9 +55,6 @@ export const MultiStepForm = <
         variant="outline"
         size="sm"
         className="hover:bg-green-600 dark:hover:bg-green-700 mt-4"
-        onClick={() => {
-          rest.onSubmit(formValues as TFormValues);
-        }}
       >
         Submit
       </Button>
@@ -64,7 +62,7 @@ export const MultiStepForm = <
   };
 
   const prevButton = () => {
-    if (!hasPreviousStep) return <></>;
+    if (!hasPrevStep) return <></>;
 
     return customPrevButton ? (
       customPrevButton

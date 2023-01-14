@@ -24,7 +24,7 @@ export const ImageCropper = (props: ImageCropperProps) => {
     setRotate(rotate);
   };
 
-  const handleSave = () => {
+  const onImageChanged = () => {
     if (editorRef.current) {
       const canvas = editorRef.current.getImageScaledToCanvas();
       canvas.toBlob((blob) => {
@@ -44,19 +44,21 @@ export const ImageCropper = (props: ImageCropperProps) => {
           <input type="range" min="1" max="2" step="0.01" value={scale} onChange={handleScale} />
         </div>
         <div className="form-group">
-          <label>Rotate:</label>
+          <label>{'Rotate:'}</label>
           <input type="range" min="0" max="360" step="1" value={rotate} onChange={handleRotate} />
-        </div>
-        <div className="form-group">
-          <button type="button" className="btn btn-primary" onClick={handleSave}>
-            Save
-          </button>
         </div>
       </div>
       <div className="col-md-6">
         <div className="form-group">
           <label>{previewLabel}</label>
-          <AvatarEditor ref={editorRef} scale={scale} rotate={rotate} {...rest} />
+          <AvatarEditor
+            ref={editorRef}
+            scale={scale}
+            rotate={rotate}
+            onImageReady={onImageChanged}
+            onImageChange={onImageChanged}
+            {...rest}
+          />
         </div>
       </div>
     </div>
