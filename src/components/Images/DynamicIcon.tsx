@@ -23,21 +23,31 @@ export const DynamicIcon = ({
 }: DynamicIconProps) => {
   if (!iconName || iconName.length < 1) return <div>Could Not Find Icon</div>;
 
-  const IconComponent = React.createElement(
-    (FontAwesome as any)[`Fa${iconName.charAt(0).toUpperCase() + iconName.slice(1).toLowerCase()}`]
-  );
+  try {
+    const faIcon = (FontAwesome as any)[
+      `Fa${iconName.charAt(0).toUpperCase() + iconName.slice(1).toLowerCase()}`
+    ];
 
-  const value: IconContext = {
-    color: color,
-    size: size,
-    className: className,
-    style: style,
-    attr: attr,
-  };
+    if (!faIcon) return <></>;
 
-  return IconComponent ? (
-    <IconContext.Provider value={value}>{IconComponent}</IconContext.Provider>
-  ) : (
-    <></>
-  );
+    const IconComponent = React.createElement(faIcon);
+
+    const value: IconContext = {
+      color: color,
+      size: size,
+      className: className,
+      style: style,
+      attr: attr,
+    };
+
+    return IconComponent ? (
+      <IconContext.Provider value={value}>{IconComponent}</IconContext.Provider>
+    ) : (
+      <></>
+    );
+  } catch {
+    // In case of error, return an empty div
+    // to prevent the app from crashing
+    return <></>;
+  }
 };

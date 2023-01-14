@@ -40,11 +40,11 @@ export const ImageCropper = (props: ImageCropperProps) => {
     <div className="row">
       <div className="col-md-6">
         <div className="form-group">
-          <label>{cropLabel}</label>
+          <label className="dark:text-white">{cropLabel}</label>
           <input type="range" min="1" max="2" step="0.01" value={scale} onChange={handleScale} />
         </div>
-        <div className="form-group">
-          <label>{'Rotate:'}</label>
+        <div className="form-group ">
+          <label className="dark:text-white">{'Rotate:'}</label>
           <input type="range" min="0" max="360" step="1" value={rotate} onChange={handleRotate} />
         </div>
       </div>

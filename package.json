@@ -1,6 +1,6 @@
 {
   "name": "eiromplays-ui",
-  "version": "1.6.9-4",
+  "version": "1.6.9-6",
   "scripts": {
     "build": "run-p build:*",
     "build:scripts": "vite build",
